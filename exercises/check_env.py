@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Pre-Workshop Environment Check
-รันเช็กความพร้อมเครื่องก่อนเริ่มเรียน Workshop (Git, uv, pre-commit, gh, PlatformIO, esptool, gcc, Windows TEMP)
+รันเช็กความพร้อมเครื่องก่อนเริ่มเรียน Workshop (Git, uv, pre-commit, PlatformIO, esptool, gcc, Windows TEMP)
 """
 
 import os
@@ -108,18 +108,7 @@ def main() -> int:
         print("   -> แก้ไข: uv tool install esptool; uv tool update-shell  (แล้วปิด-เปิด Terminal ใหม่)")
         warns += 1
 
-    # 6. GitHub CLI (Optional สำหรับดู CI/Release จาก Terminal)
-    ok, ver = check_cmd(["gh", "--version"])
-    if ok:
-        auth_ok, _ = check_cmd(["gh", "auth", "status"])
-        print(f"[OK] GitHub CLI: {ver} (auth: {'logged in' if auth_ok else 'ยังไม่ login'})")
-        if not auth_ok:
-            print("   -> แนะนำ: รัน `gh auth login` เพื่อดู CI/PR/Release ผ่าน Terminal (และอย่าลืม `gh auth logout` เมื่อเลิกใช้เครื่องรวม)")
-    else:
-        print("[WARN] GitHub CLI (gh): ไม่พบ (ยังเปิด Issue/PR ผ่านเว็บ GitHub และ VS Code ได้ แต่ verify.py จะเช็กออนไลน์ไม่ได้)")
-        warns += 1
-
-    # 7. gcc / g++ สำหรับ pio test -e native ใน Lab 04
+    # 6. gcc / g++ สำหรับ pio test -e native ใน Lab 04
     gcc = shutil.which("gcc") or shutil.which("g++")
     if gcc:
         ok, ver = check_cmd([gcc, "--version"])
@@ -130,7 +119,7 @@ def main() -> int:
         print("   -> หากเครื่องห้องแล็บล็อกสิทธิ์: ใช้ Build ESP32 ในเครื่อง แล้วตรวจผล `[env:native]` บน Cloud CI ใน Lab 05 แทนได้")
         warns += 1
 
-    # 8. Windows TEMP probe (กันปัญหา cc1plus.exe: too many filenames / @C:\WINDOWS\TEMP\...)
+    # 7. Windows TEMP probe (กันปัญหา cc1plus.exe: too many filenames / @C:\WINDOWS\TEMP\...)
     if sys.platform == "win32":
         temp_dir = os.environ.get("TEMP") or os.environ.get("TMP") or ""
         temp_warn = ""

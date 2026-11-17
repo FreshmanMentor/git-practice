@@ -3,7 +3,7 @@
 ## 1. การเตรียม Repository หลักก่อนวันเรียน (Option A: Single Public Repo + Fork)
 1. สร้าง **Public Repository** บน GitHub (เช่น `esp32-git-cicd-workshop`) เพื่อให้ผู้เรียนทุกคนได้ **GitHub Actions ฟรีไม่จำกัดนาที**
 2. Push โฟลเดอร์ทั้งหมด (`workshop/`, `docs/`, `exercises/`, `videos/`, `.gitignore`, `README.md`) ขึ้นเป็น branch `main` โดยคงไฟล์ Skeleton (`# TODO` / `starter-placeholder`) ไว้ตามเดิม
-3. แจ้งผู้เรียน **20+ คน** ให้ทำตาม **[Lab 00 (Environment Setup)](./labs/LAB00-Environment_Setup.pdf)** ล่วงหน้า 1 วันก่อนเข้าคลาส เพื่อติดตั้ง Git, `uv`, `pre-commit`, `platformio`, `esptool`, VS Code Extensions, WinLibs `gcc` และพรีโหลด ESP32 package ให้ผ่าน `uv run exercises/check_env.py` ครบทั้งหมด (ลดปัญหาเน็ตห้องแล็บช้าและไม่ต้องติดตั้งแยกกลาง Lab 01–06)
+3. แจ้งผู้เรียน **20+ คน** ให้ทำตาม **[Lab 00 (Environment Setup)](../exercises/labs/LAB00-Environment_Setup.pdf)** ล่วงหน้า 1 วันก่อนเข้าคลาส เพื่อติดตั้ง Git, `uv`, `pre-commit`, `platformio`, `esptool`, VS Code Extensions, WinLibs `gcc`, ตรวจด้วย `uv run exercises/check_env.py` และพรีโหลด ESP32 package (ลดปัญหาเน็ตห้องแล็บช้าและไม่ต้องติดตั้งแยกกลาง Lab 01–06)
 4. เน้นย้ำรูปแบบ Branching ของ Workshop: **`main` เป็นเส้นตรงด้วย Rebase** และแยก branch เฉพาะตอนเตรียม **`release/v*`** เท่านั้น (ไม่มี `develop`)
 5. กำชับวิธีวางโค้ดใน **Lab 02–06**: ไฟล์เริ่มต้นมีโครง `# TODO` / `starter-placeholder` อยู่แล้ว ให้ผู้เรียน **Ctrl+A เลือกทั้งหมดแล้ววางทับ (Replace whole file)** ไม่ใช่เอาไปต่อท้ายไฟล์เดิม มิฉะนั้น `platformio.ini`, `test_main.cpp` และ `.yml` จะซ้ำกัน
 
@@ -33,9 +33,8 @@
 
 ---
 
-## 4. รายการตรวจสอบก่อนลุกจากเครื่องห้องปฏิบัติการ (Shared-PC 4-Point Logout Checklist)
-กำชับผู้เรียนทุกคนหลังจบ Workshop ให้ทำครบทั้ง **4 จุด**:
+## 4. รายการตรวจสอบก่อนลุกจากเครื่องห้องปฏิบัติการ (Shared-PC 3-Point Logout Checklist)
+กำชับผู้เรียนทุกคนหลังจบ Workshop ให้ทำครบทั้ง **3 จุด**:
 1. **VS Code:** คลิกไอคอน **Accounts** (รูปคนมุมซ้ายล่าง) → เลือก `<username> (GitHub)` → **Sign Out** (รวมถึง Settings Sync / GitHub Copilot ถ้ามี)
-2. **GitHub CLI:** รัน `gh auth logout` ใน Terminal
-3. **Windows Credential Manager & Local Config:** เปิด Control Panel → Credential Manager → Windows Credentials ลบรายการ `git:https://github.com` และ `gh:github.com*` (หรือตรวจด้วย `cmdkey /list` / `cmdkey /delete:git:https://github.com`)
-4. **Browser & Workspace:** กด **Sign out** บนหน้าเว็บ `github.com` (หรือใช้โหมด Incognito), ปิดหน้าต่างเบราว์เซอร์ และลบโฟลเดอร์โปรเจกต์/ไฟล์ `.bin` ที่โหลดไว้ในเครื่องรวมออก
+2. **Windows Credential Manager & Local Config:** เปิด Control Panel → Credential Manager → Windows Credentials ลบรายการ `git:https://github.com` (หรือตรวจด้วย `cmdkey /list` / `cmdkey /delete:git:https://github.com`)
+3. **Browser & Workspace:** กด **Sign out** บนหน้าเว็บ `github.com` (หรือใช้โหมด Incognito), ปิดหน้าต่างเบราว์เซอร์ และลบโฟลเดอร์โปรเจกต์/ไฟล์ `.bin` ที่โหลดไว้ในเครื่องรวมออก

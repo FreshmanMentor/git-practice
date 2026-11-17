@@ -75,6 +75,15 @@ def annotate(src_name: str, out_name: str, items: list[dict]) -> None:
 
 
 def main() -> None:
+    # 0. LAB 00: VS Code PlatformIO IDE Extension
+    annotate(
+        "vscode-platformio-ext.png",
+        "anno-00-vscode-platformio.png",
+        [
+            {"num": 1, "box": (178, 235, 282, 268), "label": "กด Install สำหรับ PlatformIO IDE ใน VS Code", "pos": "right"},
+        ],
+    )
+
     # 1. LAB 01: Fork & Clone
     annotate(
         "gh-01-repo-fork.png",

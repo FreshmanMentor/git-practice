@@ -3,12 +3,12 @@
 โฟลเดอร์นี้รวมโจทย์ฝึกปฏิบัติทั้ง **6 Modules** (จับคู่กับใบงาน **7 ฉบับ: `LAB00–LAB06`**) สำหรับโปรเจกต์ [workshop/](../workshop) พร้อมระบบตรวจผลแบบ **Hybrid**:
 1. **สคริปต์ตรวจอัตโนมัติ:** รันจากโฟลเดอร์ root ของ Repo ด้วย `uv run exercises/verify.py --module <1-6>` หรือ `--all` (ใช้ `python exercises/verify.py ...` แทนก็ได้เช่นกัน)
 2. **Visual Checklist:** ตารางเช็กเกณฑ์ผ่านด้วยตาบน GitHub UI / Terminal
-   - *หมายเหตุ:* เกณฑ์ออนไลน์ใน Module 2 (Merged PR), Module 5 (CI run) และ Module 6 (GitHub Release) จะตรวจผ่านต่อเมื่อ Push ขึ้น Fork บน `github.com` และ `gh auth login` แล้วเท่านั้น (หากทดสอบแบบ Offline / local remote จะขึ้น `[WARN]` แทน `[FAIL]`)
+   - *หมายเหตุ:* เกณฑ์ออนไลน์ใน Module 2 (Merged PR), Module 5 (CI run) และ Module 6 (GitHub Release) ให้ตรวจดูบนหน้าเว็บ GitHub (แท็บ PR / Actions / Releases) ได้โดยตรง
 
 ---
 
 ## วิธีเตรียมเครื่องและใช้งาน `verify.py` (ใช้ `uv` หรือ `python`)
-> **ก่อนเริ่ม Module 1:** ทำตามใบงาน **LAB 00 (Environment Setup)** ให้เรียบร้อยเพื่อลง `git`, `uv`, `pre-commit`, `platformio`, `esptool`, `gh`, `gcc` และพรีโหลดแพ็กเกจ ESP32 ครบในที่เดียว จากนั้น `cd` เข้าโฟลเดอร์ root ของ Repo (`git-practice`) แล้วเช็กความพร้อมด้วยคำสั่งด้านล่าง:
+> **ก่อนเริ่ม Module 1:** ทำตามใบงาน **[LAB00-Environment_Setup.pdf](./labs/LAB00-Environment_Setup.pdf)** ให้เรียบร้อยเพื่อลง `git`, `uv`, `pre-commit`, `platformio`, `esptool`, `gcc`, รัน `check_env.py` ตรวจเครื่อง และพรีโหลดแพ็กเกจ ESP32 ล่วงหน้า จากนั้นใช้คำสั่งด้านล่างเพื่อตรวจผลแต่ละ Module:
 
 ```powershell
 # 0. เช็กความพร้อมเครื่องก่อนเริ่ม (รายละเอียดการติดตั้งทั้งหมดอยู่ใน LAB 00)
@@ -45,11 +45,11 @@ uv run exercises/verify.py --all
 ### Module 2: Issue Forms (`.yml`), Pull Request (Rebase) & Branch Protection
 **เป้าหมาย:** สร้างแบบฟอร์ม Issue ด้วย YAML, ใช้/ปรับปรุง PR Template, ทำ Code Review และตั้งค่า Branch Protection บังคับ Linear History
 - **โจทย์:**
-  1. แทนที่ไฟล์ Issue Forms Skeleton ใน `.github/ISSUE_TEMPLATE/`: `bug_report.yml`, `feature_request.yml` และ `config.yml` ตามใบงาน **LAB 02** (อ้างอิงเฉลยที่ `exercises/solutions/.github/ISSUE_TEMPLATE/`)
+  1. แทนที่ไฟล์ Issue Forms Skeleton ใน `.github/ISSUE_TEMPLATE/`: `bug_report.yml`, `feature_request.yml` และ `config.yml` ตามใบงาน **LAB 02** (`./labs/LAB02-Issue_Forms_PR_Protection.pdf`)
   2. ตรวจสอบ (หรือปรับแต่งเพิ่มเติม) ไฟล์ `.github/pull_request_template.md` ที่มีให้ใน Repo แล้ว นำไฟล์ทั้งหมดขึ้น `main` บน Fork ของตัวเองก่อน (GitHub อ่าน Issue Template จาก `main` เท่านั้น)
   3. ลองเปิด Issue ใหม่บน GitHub Fork ของตัวเอง เพื่อดูหน้าตาฟอร์ม Dropdown/Input/Checkbox ที่สร้างจากไฟล์ `.yml`
   4. Push `feature/fast-blink` ขึ้น Fork แล้วเปิด Pull Request เข้า **`main`** (ผ่านเว็บ GitHub หรือ VS Code Extension) และตั้ง Branch Protection / Ruleset บน `main` โดยติ๊ก **Require linear history**
-  5. Review และ Merge PR เข้า `main` ด้วย **Rebase and merge** (`gh pr merge --rebase --delete-branch`) — และหากใช้เครื่องรวม อย่าลืม Logout ออกจาก VS Code, `gh` และ Browser
+  5. Review และ Merge PR เข้า `main` ด้วย **Rebase and merge** บนหน้าเว็บ GitHub (หรือ VS Code Extension) — และหากใช้เครื่องรวม อย่าลืม Sign Out ออกจาก VS Code, Windows Credential Manager และ Browser
 - **เกณฑ์ผ่าน:**
   - [ ] หน้า **Issues → New Issue** บน GitHub แสดงฟอร์ม Dropdown/Input/Checkbox จากไฟล์ `.yml`
   - [ ] หน้า PR บน GitHub แสดง Checklist จาก Template อัตโนมัติ
@@ -126,7 +126,7 @@ uv run exercises/verify.py --all
      esptool --chip esp32 --port COM3 --baud 460800 write-flash 0x0 esp32doit-v1.0.0-merged-firmware.bin
      ```
      *(หรือเปิดเว็บ [ESP Tool](https://espressif.github.io/esptool-js/) บน Chrome/Edge เสียบสาย USB แล้วเลือกไฟล์ที่ Address `0x0` ได้ทันทีโดยไม่ต้องลงโปรแกรม)*
-  7. **Shared-PC Cleanup (สำคัญมากสำหรับเครื่องห้องแล็บ):** Sign Out ออกจาก VS Code (`Accounts -> Sign Out`), รัน `gh auth logout`, ล้าง Git Credential Manager (`cmdkey /list`), Sign Out บน Browser และลบโฟลเดอร์งานที่ Clone ไว้
+  7. **Shared-PC Cleanup (สำคัญมากสำหรับเครื่องห้องแล็บ):** Sign Out ออกจาก VS Code (`Accounts -> Sign Out`), ล้าง Git Credential Manager (`cmdkey /list`), Sign Out บน Browser และลบโฟลเดอร์งานที่ Clone ไว้
 - **เกณฑ์ผ่าน:**
   - [ ] หน้า **Releases** บน GitHub มีเวอร์ชัน `v1.0.0` พร้อม Release Notes อัตโนมัติ
   - [ ] มีไฟล์แนบครบทั้ง `esp32doit-v1.0.0-firmware.bin` และ `esp32doit-v1.0.0-merged-firmware.bin`

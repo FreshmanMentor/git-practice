@@ -98,7 +98,7 @@ class Checker:
             return "ข้ามการเช็กออนไลน์ (ยังไม่ได้ตั้ง remote)"
         if not self.is_github_remote():
             return "ข้ามการเช็กออนไลน์ (remote ปัจจุบันไม่ใช่ github.com)"
-        return "ข้ามการเช็กออนไลน์ (ยังไม่ได้ติดตั้ง gh หรือ gh auth login)"
+        return "ข้ามการเช็กออนไลน์ (ดูผล PR / Actions / Releases บนหน้าเว็บ GitHub แทนได้)"
 
     def check_module_1(self) -> None:
         print("\n=== Module 1: Linear History (Rebase) & Conventional Commits ===")
@@ -207,7 +207,7 @@ class Checker:
             if bug_ok and feat_ok:
                 self.record("PASS", "Issue Forms (.yml)", f"พบ {len(issue_ymls)} ไฟล์ใน .github/ISSUE_TEMPLATE/ และตั้งค่า fields ครบ")
             else:
-                self.record("FAIL", "Issue Forms (.yml)", "ไฟล์ Issue Form ยังมี TODO ที่ต้องเติม fields ให้ครบ (ดู docs/labs/LAB02)")
+                self.record("FAIL", "Issue Forms (.yml)", "ไฟล์ Issue Form ยังมี TODO ที่ต้องเติม fields ให้ครบ (ดู exercises/labs/LAB02)")
         else:
             self.record("FAIL", "Issue Forms (.yml)", "ไม่พบไฟล์ .yml ใน .github/ISSUE_TEMPLATE/ (เช่น bug_report.yml)")
 

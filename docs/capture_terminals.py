@@ -96,13 +96,14 @@ def run_and_render(
     out_name: str,
     env_extra: dict | None = None,
     max_lines: int = 38,
+    cwd: Path | None = None,
 ) -> None:
     env = os.environ.copy()
     if env_extra:
         env.update(env_extra)
     p = subprocess.run(
         cmd,
-        cwd=str(ROOT),
+        cwd=str(cwd or ROOT),
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -118,20 +119,21 @@ def run_and_render(
 def main() -> None:
     pio = str(Path.home() / ".platformio" / "penv" / "Scripts" / "pio.exe")
     local_tmp = str(Path.home() / "AppData" / "Local" / "Temp")
+    workshop_dir = ROOT / "workshop"
     args = os.sys.argv[1:]
     with sync_playwright() as pw:
         browser = pw.chromium.launch(channel="msedge")
         try:
             if not args or "env" in args:
-                run_and_render(browser, "Pre-Workshop Check (check_env.py)", "uv run exercises/check_env.py", ["uv", "run", "exercises/check_env.py"], "term-00-check-env.png", {"TEMP": local_tmp, "TMP": local_tmp})
+                run_and_render(browser, "Pre-Workshop Check (scripts/check_env.py)", "uv run scripts/check_env.py", ["uv", "run", "scripts/check_env.py"], "term-00-check-env.png", {"TEMP": local_tmp, "TMP": local_tmp}, cwd=workshop_dir)
             if not args or "git" in args:
-                run_and_render(browser, "git log --graph --oneline --decorate (SavEe2429/git-practice)", "git log --graph --oneline --decorate -n 6", ["git", "log", "--graph", "--oneline", "--decorate", "-n", "6"], "term-01-git-log.png")
+                run_and_render(browser, "git log --graph --oneline --decorate (SavEe2429/git-practice)", "git log --graph --oneline --decorate -n 6", ["git", "log", "--graph", "--oneline", "--decorate", "-n", "6"], "term-01-git-log.png", cwd=workshop_dir)
             if not args or "precommit" in args:
-                run_and_render(browser, "pre-commit run --all-files", "pre-commit run --all-files", ["pre-commit", "run", "--all-files"], "term-02-pre-commit.png")
+                run_and_render(browser, "pre-commit run --all-files", "pre-commit run --all-files", ["pre-commit", "run", "--all-files"], "term-02-pre-commit.png", cwd=workshop_dir)
             if not args or "pio" in args:
-                run_and_render(browser, "PlatformIO Build (esp32doit-devkit-v1)", "pio run -d workshop -e esp32doit-devkit-v1", [pio, "run", "-d", "workshop", "-e", "esp32doit-devkit-v1"], "term-03-pio-build.png", {"TEMP": local_tmp, "TMP": local_tmp})
+                run_and_render(browser, "PlatformIO Build (esp32doit-devkit-v1)", "pio run -e esp32doit-devkit-v1", [pio, "run", "-e", "esp32doit-devkit-v1"], "term-03-pio-build.png", {"TEMP": local_tmp, "TMP": local_tmp}, cwd=workshop_dir)
             if not args or "verify" in args:
-                run_and_render(browser, "Workshop Self-Check (verify.py)", "uv run exercises/verify.py --all", ["uv", "run", "exercises/verify.py", "--all"], "term-04-verify.png", max_lines=45)
+                run_and_render(browser, "Workshop Self-Check (scripts/verify.py)", "uv run scripts/verify.py --all", ["uv", "run", "scripts/verify.py", "--all"], "term-04-verify.png", max_lines=45, cwd=workshop_dir)
         finally:
             browser.close()
 

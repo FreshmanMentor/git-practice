@@ -13,5 +13,6 @@
 ---
 
 - คู่มือผู้สอน: [instructor-guide.md](./instructor-guide.md)
-- แบบฝึกหัดรวม & สคริปต์ตรวจผล: [../exercises/exercises.md](../exercises/exercises.md) (`uv run exercises/verify.py --all`)
+- แบบฝึกหัดรวม: [../exercises/exercises.md](../exercises/exercises.md)
+- สคริปต์ตรวจผล (รันจาก `workshop/`): `uv run scripts/verify.py --all`
 - วิดีโอประกอบแต่ละ Lab: [../videos/scripts/video-scripts.md](../videos/scripts/video-scripts.md)

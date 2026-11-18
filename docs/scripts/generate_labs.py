@@ -23,11 +23,11 @@ LABS = [
         "title": "Lab 00: Environment Setup &amp; Toolchain Preparation (เตรียมเครื่องครบทุก Lab)",
         "objectives": [
             "ติดตั้งเครื่องมือทั้งหมดที่ใช้ตั้งแต่ Lab 01 ถึง Lab 06 ไว้ล่วงหน้าในจุดเดียว (Git, VS Code, <code>uv</code>, CLI Tools, WinLibs <code>gcc</code> และ PlatformIO)",
-            "Fork โปรเจกต์, ตั้งค่า Git <code>--local</code>, ตรวจสอบความพร้อมด้วย <code>exercises/check_env.py</code> และ Pre-cache แพ็กเกจ ESP32 ก่อนเริ่ม Lab 01",
+            "Fork โปรเจกต์, ตั้งค่า Git <code>--local</code>, เปิดโฟลเดอร์ <code>workshop</code> เป็น Workspace หลัก, ตรวจความพร้อมด้วย <code>scripts/check_env.py</code> และ Pre-cache แพ็กเกจ ESP32 ก่อนเริ่ม Lab 01",
         ],
         "outcomes": [
             "สามารถเรียกใช้งานคำสั่ง <code>git</code>, <code>uv</code>, <code>pre-commit</code>, <code>pio</code>, <code>esptool</code> และ <code>gcc</code> จาก Terminal ได้จริง",
-            "รัน <code>uv run exercises/check_env.py</code> ผ่านและ Build โปรเจกต์ตัวอย่าง <code>workshop/</code> ล่วงหน้าได้สำเร็จ",
+            "รัน <code>uv run scripts/check_env.py</code> ผ่านและ Build โปรเจกต์ใน <code>workshop</code> ล่วงหน้าได้สำเร็จ",
         ],
         "tools": [
             "ระบบปฏิบัติการ Windows 10/11 (PowerShell), macOS หรือ Linux พร้อมอินเทอร์เน็ต",
@@ -35,7 +35,7 @@ LABS = [
             "<code>PATH</code> = รายชื่อโฟลเดอร์ที่ Terminal ใช้ค้นหาคำสั่ง",
             "<code>uv</code> = ตัวจัดการ Python CLI ที่แยก Environment สะอาดกว่า <code>pip</code> กลาง",
             "<code>origin</code> = Repo Fork ของคุณเองบน GitHub ส่วน <code>upstream</code> = Repo ต้นทางของอาจารย์",
-            "สคริปต์ตรวจความพร้อม: <code>uv run exercises/check_env.py</code> (ใช้ <code>python</code> แทน <code>uv run</code> ได้เช่นกัน)",
+            "สคริปต์ตรวจความพร้อม (รันจากโฟลเดอร์ <code>workshop</code>): <code>uv run scripts/check_env.py</code> (ใช้ <code>python</code> แทน <code>uv run</code> ได้เช่นกัน)",
         ],
         "experiments": [
             ("L-01", "ติดตั้ง Git, VS Code และ Extensions (<strong>PlatformIO IDE</strong> และ <strong>GitHub Pull Requests</strong>)"),
@@ -102,8 +102,8 @@ winget install BrechtSanders.WinLibs.POSIX.UCRT
                     "กดปุ่ม <code>[1] Fork</code> เพื่อคัดลอก Repo ไปยังบัญชี GitHub ของตัวเอง",
                     "บนหน้า Fork ของตัวเอง ให้กดแท็บ <strong>Actions</strong> แล้วกดปุ่มสีเขียว <strong>I understand my workflows, go ahead and enable them</strong>",
                     "กลับมาที่แท็บ <strong>Code</strong> กด <code>[2] &lt;&gt; Code</code> เพื่อ Copy URL ของ Fork ตัวเอง",
-                    "Clone ลงในโฟลเดอร์พาทสั้นๆ (เช่น <code>C:\\ws</code>) แล้ว <code>cd git-practice</code>",
-                    "เพิ่ม <code>upstream</code> ชี้ไปที่ Repo อาจารย์ และตั้งค่า <code>user.name</code> / <code>user.email</code> แบบ <code>--local</code>",
+                    "Clone ลงในโฟลเดอร์พาทสั้นๆ (เช่น <code>C:\\ws</code>) แล้วเข้า <code>cd git-practice</code>",
+                    "เพิ่ม <code>upstream</code> ชี้ไปที่ Repo อาจารย์, ตั้งค่า <code>user.name</code> / <code>user.email</code> แบบ <code>--local</code> และเข้าโฟลเดอร์ <code>cd workshop</code> เพื่อเปิดเป็น Workspace หลัก",
                 ],
                 "images": [
                     ("../images/anno-01-repo-fork.png", "หน้าเว็บ GitHub: [1] กดปุ่ม Fork -> [2] กด <> Code เพื่อ Copy URL ของ Fork ตัวเอง"),
@@ -117,30 +117,32 @@ cd git-practice
 # 2. เพิ่ม upstream อ้างอิง Repo อาจารย์ และตั้งชื่อผู้เขียนแบบ --local (ปลอดภัยบนเครื่องรวม):
 git remote add upstream https://github.com/SavEe2429/git-practice.git
 git config --local user.name "Your Name"
-git config --local user.email "you@example.com" """,
+git config --local user.email "you@example.com"
+
+# 3. เปิดโฟลเดอร์ workshop เป็น Workspace หลักใน VS Code และเข้าโฟลเดอร์ workshop:
+code workshop
+cd workshop""",
             },
             {
                 "heading": "L-04: ตรวจสอบการติดตั้งด้วย check_env.py ก่อน แล้ว Pre-cache แพ็กเกจ ESP32",
                 "steps": [
-                    "<strong>รัน <code>uv run exercises/check_env.py</code> ก่อนเสมอ</strong> เพื่อตรวจสอบว่าเครื่องมือและ Git identity พร้อมครบทุกตัว",
-                    "<em>หมายเหตุสำหรับเครื่องห้องแล็บ:</em> หากในเครื่องมีโฟลเดอร์ <code>git-practice</code> อยู่แล้ว สามารถรัน <code>check_env.py</code> ตั้งแต่อันดับแรกเพื่อเช็กว่าขาดตัวไหนบ้าง",
+                    "<strong>รัน <code>uv run scripts/check_env.py</code> จากในโฟลเดอร์ <code>workshop</code> ก่อนเสมอ</strong> เพื่อตรวจสอบว่าเครื่องมือและ Git identity พร้อมครบทุกตัว",
+                    "<em>หมายเหตุสำหรับเครื่องห้องแล็บ:</em> หากในเครื่องมีโฟลเดอร์ <code>git-practice\\workshop</code> อยู่แล้ว สามารถรัน <code>uv run scripts/check_env.py</code> ตั้งแต่อันดับแรกเพื่อเช็กว่าขาดตัวไหนบ้าง",
                     "หาก <code>check_env.py</code> แจ้งเตือนเรื่อง <code>Windows TEMP</code> ให้สร้างโฟลเดอร์ <code>C:\\Temp</code> และตั้งค่า <code>$env:TEMP</code> / <code>$env:TMP</code> ก่อนรัน PlatformIO",
-                    "เปิดโฟลเดอร์ <code>workshop</code> ใน VS Code (<code>code workshop</code>)",
-                    "รัน <code>pio run -d workshop -e esp32doit-devkit-v1</code> เพื่อ Pre-cache Toolchain และแพ็กเกจ ESP32 ล่วงหน้า (รอบแรกใช้เวลา ~20–60 วินาที)",
+                    "รัน <code>pio run -e esp32doit-devkit-v1</code> เพื่อ Pre-cache Toolchain และแพ็กเกจ ESP32 ล่วงหน้า (รอบแรกใช้เวลา ~20–60 วินาที)",
                 ],
-                "code": """# 1. ตรวจสอบความพร้อมทั้งหมดก่อนเริ่ม Build (ต้องอยู่ในโฟลเดอร์ root git-practice):
-uv run exercises/check_env.py
+                "code": """# 1. ตรวจสอบความพร้อมทั้งหมดก่อนเริ่ม Build (รันใน Terminal ของ workspace workshop):
+uv run scripts/check_env.py
 
 # 2. [หาก check_env.py เตือนเรื่อง C:\\WINDOWS\\TEMP] แก้ TEMP ชั่วคราวใน PowerShell:
 New-Item -ItemType Directory -Force C:\\Temp | Out-Null
 $env:TEMP="C:\\Temp"; $env:TMP="C:\\Temp"
 
-# 3. เปิด workshop ใน VS Code และ Pre-cache แพ็กเกจ ESP32:
-code workshop
-pio run -d workshop -e esp32doit-devkit-v1""",
+# 3. Pre-cache แพ็กเกจ ESP32 (จากใน workshop):
+pio run -e esp32doit-devkit-v1""",
             },
         ],
-        "expected_output": """$ uv run exercises/check_env.py
+        "expected_output": """$ uv run scripts/check_env.py
 === Pre-Workshop Environment Check ===
 
 [OK] Git: git version 2.56.0.windows.4
@@ -155,7 +157,7 @@ pio run -d workshop -e esp32doit-devkit-v1""",
 พร้อมบางส่วน (พบ 1 คำเตือน [WARN] — อ่านรายละเอียดด้านบนก่อนเริ่ม Lab 04 / Lab 06)""",
         "results": [
             "L-02: ผลลัพธ์ของ <code>git --version</code>, <code>uv --version</code>, <code>pre-commit --version</code>, <code>pio --version</code> และ <code>esptool version</code>",
-            "L-04: ผลลัพธ์จริงจาก <code>uv run exercises/check_env.py</code> และ <code>pio run -d workshop -e esp32doit-devkit-v1</code>",
+            "L-04: ผลลัพธ์จริงจาก <code>uv run scripts/check_env.py</code> และ <code>pio run -e esp32doit-devkit-v1</code>",
         ],
         "questions": [
             "Q1: เหตุใดเราจึงควรรัน <code>check_env.py</code> เพื่อตรวจสอบเครื่องมือก่อนเริ่ม Build และเข้า Lab 01?",
@@ -164,16 +166,16 @@ pio run -d workshop -e esp32doit-devkit-v1""",
         "exercise": {
             "code": "L-05",
             "steps": [
-                "เข้าไปที่โฟลเดอร์ root ของ <code>git-practice</code>",
-                "รัน <code>uv run exercises/check_env.py</code> เพื่อยืนยันว่าไม่มีรายการ <code>[MISSING]</code>",
-                "รัน <code>pio run -d workshop -e esp32doit-devkit-v1</code> ยืนยันว่า Build ผ่าน <code>[SUCCESS]</code> พร้อมเข้าเรียน Lab 01",
+                "เข้าไปที่โฟลเดอร์ Workspace หลัก (<code>C:\\ws\\git-practice\\workshop</code>)",
+                "รัน <code>uv run scripts/check_env.py</code> เพื่อยืนยันว่าไม่มีรายการ <code>[MISSING]</code>",
+                "รัน <code>pio run -e esp32doit-devkit-v1</code> ยืนยันว่า Build ผ่าน <code>[SUCCESS]</code> พร้อมเข้าเรียน Lab 01",
             ],
-            "snippet": """cd C:\\ws\\git-practice
-uv run exercises/check_env.py
-pio run -d workshop -e esp32doit-devkit-v1""",
+            "snippet": """cd C:\\ws\\git-practice\\workshop
+uv run scripts/check_env.py
+pio run -e esp32doit-devkit-v1""",
         },
         "screenshots": [
-            ("../images/term-00-check-env.png", "ตัวอย่างผลรันจริงจาก uv run exercises/check_env.py (รายการที่ยังไม่อยู่ใน PATH จะขึ้น [WARN] พร้อมคำสั่งแก้ไข)"),
+            ("../images/term-00-check-env.png", "ตัวอย่างผลรันจริงจาก uv run scripts/check_env.py (รายการที่ยังไม่อยู่ใน PATH จะขึ้น [WARN] พร้อมคำสั่งแก้ไข)"),
         ],
     },
     {
@@ -219,8 +221,8 @@ pio run -d workshop -e esp32doit-devkit-v1""",
 #   |/
 #   * C1
 
-# 1. เข้าโฟลเดอร์ที่ Clone ไว้ใน Lab 00 แล้วตรวจ Remote ทั้ง 2 ตัว:
-cd C:\\ws\\git-practice
+# 1. เข้าโฟลเดอร์ Workspace workshop แล้วตรวจ Remote ทั้ง 2 ตัว:
+cd C:\\ws\\git-practice\\workshop
 git remote -v
 
 # 2. อัปเดต main ของเครื่องและ Fork ให้ตรงกับ upstream/main ล่าสุด:
@@ -239,10 +241,10 @@ git push origin main""",
                 "code": """# 1. แตก branch ใหม่จาก main
 git switch -c feature/fast-blink main
 
-# 2. เปิด workshop/src/main.cpp แก้บรรทัดที่ 15 ใน setup():
+# 2. เปิด src/main.cpp (ใน workshop) แก้บรรทัดที่ 15 ใน setup():
 #    blink_interval_ms = blink_math::clamp_interval(200);  // fast blink preset
 # จากนั้น Stage และ Commit แบบ Conventional Commits:
-git add workshop/src/main.cpp
+git add src/main.cpp
 git commit -m "feat(blink): support fast blink interval"
 
 # 3. ดึงฐานล่าสุดจาก upstream (Repo อาจารย์) แล้ว Rebase:
@@ -265,7 +267,7 @@ git config --local core.editor "code --wait"
 # --- หากเกิด CONFLICT ระหว่าง git rebase upstream/main ---
 # 1. เปิดไฟล์ที่มีปัญหา ลบเส้น <<<<<<< HEAD, =======, >>>>>>> แล้วเก็บโค้ดที่ถูกต้อง
 # 2. Stage ไฟล์ที่แก้แล้ว แล้วทำ Rebase ต่อ:
-git add workshop/src/main.cpp
+git add src/main.cpp
 git rebase --continue
 # (หากทำพลาดอยากถอยกลับก่อน Rebase ให้ใช้: git rebase --abort)
 
@@ -296,10 +298,10 @@ $ git log --graph --oneline --decorate -n 4
             "code": "L-04",
             "steps": [
                 "ตรวจสอบว่าอยู่บน Branch <code>feature/fast-blink</code> ที่มี Commit ใหม่ต่อปลาย <code>main</code> แบบเส้นตรง",
-                "รัน <code>uv run exercises/verify.py --module 1</code> เพื่อตรวจผล Lab 01",
+                "รัน <code>uv run scripts/verify.py --module 1</code> จากในโฟลเดอร์ <code>workshop</code> เพื่อตรวจผล Lab 01",
             ],
-            "snippet": """# ตรวจผล Module 1 (ต้องมี feature/* branch ที่ Commit งานจริงต่อจาก main):
-uv run exercises/verify.py --module 1""",
+            "snippet": """# ตรวจผล Module 1 (รันจากในโฟลเดอร์ workshop):
+uv run scripts/verify.py --module 1""",
         },
         "screenshots": [
             ("../images/term-01-git-log.png", "ตัวอย่างผลลัพธ์จาก git log --graph --oneline --decorate: ประวัติ Commit เรียงเป็นเส้นตรง"),
@@ -444,10 +446,10 @@ contact_links:
                 "images": [
                     ("../images/gh-02-issue-templates.png", "ตรวจสอบให้แน่ใจว่าทั้ง 3 ไฟล์ใน .github/ISSUE_TEMPLATE/ ถูก Push เข้า main บน Fork แล้ว"),
                 ],
-                "code": """# ตรวจ YAML แล้วนำไฟล์ Issue Forms ขึ้น main บน Fork ก่อนเปิด Issue:
-uv run --with pyyaml python -c "import yaml,glob; [yaml.safe_load(open(f,encoding='utf-8')) for f in glob.glob('.github/**/*.yml',recursive=True)]; print('YAML OK')"
+                "code": """# ตรวจ YAML แล้วนำไฟล์ Issue Forms ขึ้น main บน Fork ก่อนเปิด Issue (รันจาก workshop):
+uv run --with pyyaml python -c "import yaml,glob; [yaml.safe_load(open(f,encoding='utf-8')) for f in glob.glob('../.github/**/*.yml',recursive=True)]; print('YAML OK')"
 git switch main
-git add .github/ISSUE_TEMPLATE/
+git add ../.github/ISSUE_TEMPLATE/
 git commit -m "docs(github): add YAML issue forms and chooser config"
 git push origin main""",
             },
@@ -517,11 +519,11 @@ VS Code Accounts -> <your-username> (GitHub) -> Sign Out (เรียบร้�
             "steps": [
                 "เปิด Issue 1 รายการด้วยฟอร์ม <code>feature_request.yml</code> บนหน้าเว็บ GitHub",
                 "เปิด PR เข้า <code>main</code> (ผ่านเว็บหรือ VS Code Extension) พร้อมใส่ <code>Closes #&lt;เลข&gt;</code> เพื่อปิด Issue",
-                "รัน <code>uv run exercises/verify.py --module 2</code> เพื่อตรวจผล (หากใช้เครื่องห้องแล็บอย่าลืม Sign Out)",
+                "รัน <code>uv run scripts/verify.py --module 2</code> จากใน <code>workshop</code> เพื่อตรวจผล (หากใช้เครื่องห้องแล็บอย่าลืม Sign Out)",
             ],
             "snippet": """# ในรายละเอียด PR (ผ่านเว็บ GitHub หรือ VS Code Extension) ให้ใส่: Closes #<เลข>
 # หากใช้เครื่องห้องแล็บ อย่าลืม VS Code Accounts -> Sign Out หลังทำเสร็จ!
-uv run exercises/verify.py --module 2""",
+uv run scripts/verify.py --module 2""",
         },
         "screenshots": [
             ("../images/anno-02-pr-detail.png", "ผลลัพธ์หลังเปิด PR และ Merge สำเร็จ: [1] ตรวจแท็บ Checks ผ่านครบ -> [2] สถานะเปลี่ยนเป็น Merged"),
@@ -595,13 +597,13 @@ repos:
             {
                 "heading": "L-01 (ส่วนที่ 4/4): Stage ไฟล์ config และติดตั้ง Git Hook ทั้ง 2 Stage",
                 "steps": [
-                    "รัน <code>git add .pre-commit-config.yaml</code> ก่อนติดตั้ง Hook เสมอ",
+                    "รัน <code>git add ../.pre-commit-config.yaml</code> ก่อนติดตั้ง Hook เสมอ (กรณี Terminal อยู่ใน <code>workshop</code>)",
                     "ติดตั้ง Hook ทั้ง 2 Stage (<code>pre-commit install</code> และ <code>pre-commit install --hook-type commit-msg</code>)",
                     "รัน <code>pre-commit run --all-files</code> (รอบแรกจะโหลด Environment ของ Hook สักครู่)",
                     "รัน <code>git add -u</code> อีกรอบเผื่อ <code>end-of-file-fixer</code> เติมบรรทัดว่างท้ายไฟล์ให้ (กัน Error <code>Your pre-commit configuration is unstaged</code>; ข้อความ <code>LF will be replaced by CRLF</code> บน Windows เป็นเรื่องปกติ)",
                 ],
                 "code": """# 1. Stage ไฟล์ config ก่อนเสมอ + ผูก Hook ทั้ง 2 stage เข้า .git/hooks/:
-git add .pre-commit-config.yaml
+git add ../.pre-commit-config.yaml
 pre-commit install
 pre-commit install --hook-type commit-msg
 
@@ -615,18 +617,18 @@ git commit -m "chore(hooks): configure pre-commit and clang-format" """,
             {
                 "heading": "L-02: ทดสอบ Break-Fix แยก 2 ขั้น (ขั้น A: Format Hook -> ขั้น B: Commit-Msg Hook)",
                 "steps": [
-                    "<strong>ขั้น A (ทดสอบ Format Hook):</strong> เพิ่มบรรทัดที่จัดช่องว่างผิดจงใจ <code>int   precommit_test =  1;</code> ท้ายฟังก์ชัน <code>setup()</code> ใน <code>workshop/src/main.cpp</code>",
+                    "<strong>ขั้น A (ทดสอบ Format Hook):</strong> เพิ่มบรรทัดที่จัดช่องว่างผิดจงใจ <code>int   precommit_test =  1;</code> ท้ายฟังก์ชัน <code>setup()</code> ใน <code>src/main.cpp</code> (ใน <code>workshop</code>)",
                     "Stage และลอง Commit -> สังเกตว่า <code>clang-format</code> ขึ้น Failed และจัดช่องว่างใหม่ให้เราอัตโนมัติ",
-                    "<strong>ขั้น B (ทดสอบ Commit-Msg Hook):</strong> รัน <code>git add workshop/src/main.cpp</code> แล้วลอง Commit ด้วยข้อความผิดกฎ <code>\"bad commit message\"</code> -> ดู hook บล็อก",
+                    "<strong>ขั้น B (ทดสอบ Commit-Msg Hook):</strong> รัน <code>git add src/main.cpp</code> แล้วลอง Commit ด้วยข้อความผิดกฎ <code>\"bad commit message\"</code> -> ดู hook บล็อก",
                     "<strong>ขั้น C (Commit ให้ผ่าน):</strong> แก้ข้อความเป็น Conventional Commit แล้ว Commit ให้สำเร็จ",
                 ],
                 "code": """# ขั้น A: เพิ่มท้ายฟังก์ชัน setup() ใน workshop/src/main.cpp:  int   precommit_test =  1;
-git add workshop/src/main.cpp
+git add src/main.cpp
 git commit -m "style: test clang-format"
 # -> จะขึ้น clang-format Failed (files were modified by this hook) เพราะ hook จัดช่องว่างให้!
 
 # ขั้น B: Stage ไฟล์ที่ถูกจัดฟอร์แมตแล้ว จากนั้นลองตั้งชื่อ Commit ผิดกฎ:
-git add workshop/src/main.cpp
+git add src/main.cpp
 git commit -m "bad commit message"
 # -> รอบนี้ pre-commit ผ่านแล้ว ทำให้ commit-msg ทำงานและบล็อกข้อความผิดทันที!
 
@@ -659,10 +661,10 @@ Conventional Commit......................................................Failed
             "code": "L-03",
             "steps": [
                 "ตรวจสอบ Hook ทั้งหมดในเครื่องด้วย <code>pre-commit run --all-files</code>",
-                "รัน <code>uv run exercises/verify.py --module 3</code> เพื่อยืนยันผล Lab 03",
+                "รัน <code>uv run scripts/verify.py --module 3</code> จากในโฟลเดอร์ <code>workshop</code> เพื่อยืนยันผล Lab 03",
             ],
             "snippet": """pre-commit run --all-files
-uv run exercises/verify.py --module 3""",
+uv run scripts/verify.py --module 3""",
         },
         "screenshots": [
             ("../images/term-02-pre-commit.png", "ผลลัพธ์จริงของการรัน pre-commit run --all-files ผ่านทุก Hook"),
@@ -689,7 +691,7 @@ uv run exercises/verify.py --module 3""",
         "experiments": [
             ("L-01", "แทนที่ <code>workshop/platformio.ini</code> เพื่อเพิ่ม <code>[env:native]</code> คู่กับ <code>[env:esp32doit-devkit-v1]</code>"),
             ("L-02", "แทนที่ <code>workshop/test/test_native/test_main.cpp</code> ด้วย Unit Tests ครบ 4 ฟังก์ชันของ <code>blink_math</code>"),
-            ("L-03", "รัน <code>pio test -d workshop -e native -v</code> เทียบกับ <code>pio run -d workshop -e esp32doit-devkit-v1</code> แล้ว Commit/Push"),
+            ("L-03", "รัน <code>pio test -e native -v</code> เทียบกับ <code>pio run -e esp32doit-devkit-v1</code> แล้ว Commit/Push"),
         ],
         "details": [
             {
@@ -765,13 +767,13 @@ void test_calculate_cycle_ms(void) {
             {
                 "heading": "L-03 (ขั้นที่ 1/2): รัน Test & Build และวิธีแก้ปัญหาที่พบบ่อยบน Windows",
                 "steps": [
-                    "ศึกษาไฟล์ <code>workshop/test/test_esp32/test_hardware.cpp</code> ที่มีให้ใน Repo",
-                    "รัน <code>pio test -d workshop -e native -v</code> จากโฟลเดอร์ root ของ Repo",
+                    "ศึกษาไฟล์ <code>test/test_esp32/test_hardware.cpp</code> ที่มีให้ใน <code>workshop</code>",
+                    "รัน <code>pio test -e native -v</code> จากในโฟลเดอร์ Workspace <code>workshop</code>",
                     "<em>กรณีไม่มี <code>gcc</code> บน Windows:</em> สามารถลง WinLibs หรือข้ามไปดูผลบน Linux Cloud CI ใน Lab 05 ได้ (<code>verify.py</code> จะขึ้น <code>[WARN]</code> ไม่ถือว่า FAIL)",
-                    "รัน <code>pio run -d workshop -e esp32doit-devkit-v1</code> เพื่อคอมไพล์เฟิร์มแวร์ (ไม่ต้องเสียบบอร์ด; เฉพาะ <code>pio test -e esp32doit-devkit-v1</code> หรือ upload จึงจะใช้ COM Port)",
+                    "รัน <code>pio run -e esp32doit-devkit-v1</code> เพื่อคอมไพล์เฟิร์มแวร์ (ไม่ต้องเสียบบอร์ด; เฉพาะ <code>pio test -e esp32doit-devkit-v1</code> หรือ upload จึงจะใช้ COM Port)",
                 ],
-                "code": """# 1. รัน Native Unit Test บน Host PC:
-pio test -d workshop -e native -v
+                "code": """# 1. รัน Native Unit Test บน Host PC (จากใน workshop):
+pio test -e native -v
 
 # 2. หากเจอ Error `'gcc' is not recognized`: ติดตั้ง WinLibs แล้วเปิด Terminal ใหม่ (หรือไปตรวจบน CI ใน Lab 05):
 winget install BrechtSanders.WinLibs.POSIX.UCRT
@@ -780,29 +782,29 @@ g++ --version
 # 3. Build เฟิร์มแวร์ .bin (หากเจอ cc1plus: too many filenames ให้ตั้ง $env:TEMP ก่อน):
 New-Item -ItemType Directory -Force C:\\Temp | Out-Null
 $env:TEMP="C:\\Temp"; $env:TMP="C:\\Temp"
-pio run -d workshop -e esp32doit-devkit-v1""",
+pio run -e esp32doit-devkit-v1""",
             },
             {
                 "heading": "L-03 (ขั้นที่ 2/2): บันทึกการเปลี่ยนแปลงขึ้น Git (เพื่อทดสอบบน CI ใน Lab 05)",
                 "steps": [
-                    "Stage ไฟล์ <code>workshop/platformio.ini</code> และ <code>workshop/test/test_native/test_main.cpp</code>",
+                    "Stage ไฟล์ <code>platformio.ini</code> และ <code>test/test_native/test_main.cpp</code>",
                     "Commit ด้วยข้อความ Conventional Commits และ Push ขึ้น Fork",
                     "<em>หมายเหตุ:</em> หากคำสั่ง <code>pio</code> ไม่อยู่ใน PATH ให้ใช้ <code>&amp; \"$env:USERPROFILE\\.platformio\\penv\\Scripts\\pio.exe\"</code> แทนได้",
                 ],
                 "code": """# Stage, Commit (pre-commit จะจัด clang-format ให้อัตโนมัติ) และ Push:
-git add workshop/platformio.ini workshop/test/test_native/test_main.cpp
+git add platformio.ini test/test_native/test_main.cpp
 git commit -m "test(native): add [env:native] and blink_math unity tests"
 git push origin HEAD""",
             },
         ],
-        "expected_output": """$ pio test -d workshop -e native -v
+        "expected_output": """$ pio test -e native -v
 test/test_native/test_main.cpp:~: test_add_numbers_positive    [PASSED]
 test/test_native/test_main.cpp:~: test_clamp_interval_bounds   [PASSED]
 test/test_native/test_main.cpp:~: test_next_led_state_toggles  [PASSED]
 test/test_native/test_main.cpp:~: test_calculate_cycle_ms      [PASSED]
 ----------------------- 4 Tests 0 Failures 0 Ignored -----------------------
 
-$ pio run -d workshop -e esp32doit-devkit-v1
+$ pio run -e esp32doit-devkit-v1
 RAM:   [=         ]  ~6.7% (used ~22 KB from 327680 bytes)
 Flash: [==        ] ~22.2% (used ~291 KB from 1310720 bytes)
 ========================= [SUCCESS] Took ~20s =========================""",
@@ -817,11 +819,11 @@ Flash: [==        ] ~22.2% (used ~291 KB from 1310720 bytes)
         "exercise": {
             "code": "L-04",
             "steps": [
-                "ตรวจสอบว่ามี Test Cases ใน <code>workshop/test/test_native/test_main.cpp</code> ครบทั้ง 4 ฟังก์ชันของ <code>blink_math</code>",
-                "รัน <code>pio test -d workshop -e native -v</code> และ <code>uv run exercises/verify.py --module 4</code>",
+                "ตรวจสอบว่ามี Test Cases ใน <code>test/test_native/test_main.cpp</code> ครบทั้ง 4 ฟังก์ชันของ <code>blink_math</code>",
+                "รัน <code>pio test -e native -v</code> และ <code>uv run scripts/verify.py --module 4</code> จากใน <code>workshop</code>",
             ],
-            "snippet": """pio test -d workshop -e native -v
-uv run exercises/verify.py --module 4""",
+            "snippet": """pio test -e native -v
+uv run scripts/verify.py --module 4""",
         },
         "screenshots": [
             ("../images/term-03-pio-build.png", "ผลลัพธ์จริงของการ Build เฟิร์มแวร์สำหรับ esp32doit-devkit-v1"),
@@ -963,10 +965,10 @@ defaults:
                 "images": [
                     ("../images/anno-05-actions-list.png", "บนแท็บ Actions: [1] เลือก Workflow CI - Lint, Test & Build -> [2] คลิกชื่อ Run เพื่อดูรายละเอียด 3 Jobs"),
                 ],
-                "code": """# 1. ตรวจ YAML + Commit & Push ขึ้น Branch เพื่อเปิด PR เข้า main:
+                "code": """# 1. ตรวจ YAML + Commit & Push ขึ้น Branch เพื่อเปิด PR เข้า main (รันจาก workshop):
 pre-commit run check-yaml --all-files
 git switch -c ci/add-workflow main
-git add .github/workflows/ci.yml
+git add ../.github/workflows/ci.yml
 git commit -m "ci: add lint, native test and esp32 build workflow"
 git push -u origin ci/add-workflow
 
@@ -994,9 +996,9 @@ All checks have passed (3/3 successful checks)""",
             "steps": [
                 "Merge PR ที่มี <code>ci.yml</code> เข้า <code>main</code> บน Fork ของตัวเอง",
                 "ตรวจดูบนหน้าเว็บ GitHub แท็บ <strong>Actions</strong> ว่าทั้ง 3 Jobs ผ่านสีเขียวครบ (และลอง Push branch <code>release/v1.0.0</code> เพื่อดู Artifact <code>rc-firmware-*</code>)",
-                "รัน <code>uv run exercises/verify.py --module 5</code> เพื่อตรวจไฟล์ workflow ในเครื่อง",
+                "รัน <code>uv run scripts/verify.py --module 5</code> จากใน <code>workshop</code> เพื่อตรวจไฟล์ workflow ในเครื่อง",
             ],
-            "snippet": """uv run exercises/verify.py --module 5""",
+            "snippet": """uv run scripts/verify.py --module 5""",
         },
         "screenshots": [
             ("../images/anno-05-actions-graph.png", "ผลลัพธ์หลังคลิก Run บนเว็บ GitHub: กราฟ 3 Jobs ([1] Lint -> [2] Unit Test -> [3] Build ESP32) ผ่านสีเขียวครบ"),
@@ -1108,9 +1110,9 @@ defaults:
                 "images": [
                     ("../images/anno-06-releases.png", "ตัวอย่างหน้า GitHub Release (จากเวอร์ชัน v0.1.0 — ในงานของคุณจะแสดง v1.0.0): [1] เปิดดู Assets -> [2] คลิกโหลดไฟล์ *-merged-firmware.bin"),
                 ],
-                "code": """# 1. Commit + PR release.yml เข้า main บน Fork ก่อน (เช่นผ่าน release/v1.0.0):
+                "code": """# 1. Commit + PR release.yml เข้า main บน Fork ก่อน (เช่นผ่าน release/v1.0.0, รันจาก workshop):
 git switch -c release/v1.0.0 main
-git add .github/workflows/release.yml
+git add ../.github/workflows/release.yml
 git commit -m "ci(cd): add release workflow for v*.*.* tags"
 git push -u origin release/v1.0.0
 # -> เปิด PR เข้า main แล้วกด Rebase and merge
@@ -1149,7 +1151,7 @@ Assets:
   - esp32doit-v1.0.0-firmware.bin
   - esp32doit-v1.0.0-merged-firmware.bin
 
-$ uv run exercises/verify.py --all
+$ uv run scripts/verify.py --all
 ...
 Summary: 19 PASS | 0 FAIL | 0 WARN
 # (หมายเหตุ: หากไม่ได้ใช้ gh หรือเครื่องไม่มี gcc จะแสดง [WARN] ในส่วนที่เกี่ยวข้องแทน [FAIL])""",
@@ -1165,13 +1167,13 @@ Summary: 19 PASS | 0 FAIL | 0 WARN
             "code": "L-04",
             "steps": [
                 "ปล่อย Release เวอร์ชัน <code>v1.0.0</code> ใน Fork ของตัวเองและตรวจหน้า <strong>Releases</strong> บนเว็บ GitHub",
-                "รัน <code>uv run exercises/verify.py --all</code> เพื่อเก็บหลักฐานผลลัพธ์",
+                "รัน <code>uv run scripts/verify.py --all</code> จากในโฟลเดอร์ <code>workshop</code> เพื่อเก็บหลักฐานผลลัพธ์",
                 "ทำตามขั้นตอน Shared-PC Cleanup (<code>L-03</code>) ครบทั้ง 3 จุดก่อนลุกจากเครื่อง",
             ],
-            "snippet": """uv run exercises/verify.py --all""",
+            "snippet": """uv run scripts/verify.py --all""",
         },
         "screenshots": [
-            ("../images/term-04-verify.png", "ตัวอย่างผลรัน uv run exercises/verify.py --all (จุดที่ยังไม่ได้ทำบนเครื่อง/GitHub จะขึ้น [WARN]/[FAIL])"),
+            ("../images/term-04-verify.png", "ตัวอย่างผลรัน uv run scripts/verify.py --all (จุดที่ยังไม่ได้ทำบนเครื่อง/GitHub จะขึ้น [WARN]/[FAIL])"),
         ],
     },
 ]

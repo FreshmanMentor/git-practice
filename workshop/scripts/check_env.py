@@ -11,10 +11,22 @@ import sys
 import tempfile
 from pathlib import Path
 
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_DIR = SCRIPT_DIR.parent
+REPO_ROOT = PROJECT_DIR.parent if (PROJECT_DIR.parent / ".git").exists() else PROJECT_DIR
 
-def check_cmd(cmd: list[str]) -> tuple[bool, str]:
+
+def check_cmd(cmd: list[str], cwd: Path | None = None) -> tuple[bool, str]:
     try:
-        p = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=10)
+        p = subprocess.run(
+            cmd,
+            cwd=str(cwd) if cwd else None,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=10,
+        )
         out = (p.stdout or p.stderr).strip().splitlines()
         return p.returncode == 0, (out[0] if out else "")
     except Exception as exc:
@@ -45,8 +57,8 @@ def main() -> int:
     fails = 0
     warns = 0
 
-    if not (Path.cwd() / "workshop" / "platformio.ini").exists():
-        print("[WARN] ยังไม่ได้รันจากโฟลเดอร์ root ของ repo (ควร cd เข้า git-practice ก่อนรัน check_env.py)")
+    if not (PROJECT_DIR / "platformio.ini").exists():
+        print("[WARN] ไม่พบ platformio.ini ในโฟลเดอร์ workshop (กรุณาเปิดโฟลเดอร์ workshop เป็น workspace หลัก)")
         warns += 1
 
     # 1. Git & Identity
@@ -56,8 +68,8 @@ def main() -> int:
         print("   -> แก้ไข (Windows): winget install Git.Git  (หรือโหลดจาก https://git-scm.com/)")
         fails += 1
 
-    ok_name, name = check_cmd(["git", "config", "user.name"])
-    ok_mail, mail = check_cmd(["git", "config", "user.email"])
+    ok_name, name = check_cmd(["git", "config", "user.name"], cwd=REPO_ROOT)
+    ok_mail, mail = check_cmd(["git", "config", "user.email"], cwd=REPO_ROOT)
     if ok_name and ok_mail and name and mail:
         print(f"[OK] Git identity: {name} <{mail}>")
     else:

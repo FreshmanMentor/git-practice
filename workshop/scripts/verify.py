@@ -17,6 +17,21 @@ CONVENTIONAL_RE = re.compile(
 )
 
 
+def detect_default_paths() -> Tuple[Path, Path]:
+    script_dir = Path(__file__).resolve().parent
+    if (script_dir.parent / "platformio.ini").exists():
+        project_dir = script_dir.parent
+        repo_root = project_dir.parent if (project_dir.parent / ".git").exists() else project_dir
+        return repo_root, project_dir
+    cwd = Path.cwd().resolve()
+    for candidate in (cwd, *cwd.parents):
+        if (candidate / "workshop" / "platformio.ini").exists():
+            return candidate, candidate / "workshop"
+        if (candidate / "platformio.ini").exists() and (candidate.parent / ".git").exists():
+            return candidate.parent, candidate
+    return cwd, cwd / "workshop"
+
+
 def run_cmd(cmd: List[str], cwd: Path) -> Tuple[int, str, str]:
     try:
         proc = subprocess.run(
@@ -133,7 +148,6 @@ class Checker:
         else:
             self.record("FAIL", "Git commits", "ยังไม่มี commit ใน repository")
 
-        # ตรวจว่านักเรียนได้ลงมือสร้าง feature/* และ commit/rebase จริง (ไม่ให้ fresh clone หรือ commit ตรงบน main ผ่านเปล่า)
         _, f_out, _ = run_cmd(["git", "branch", "--list", "feature/*"], self.repo_root)
         feature_branches = [b.replace("*", "").strip() for b in f_out.splitlines() if b.strip()]
         if feature_branches and "main" in branches:
@@ -159,7 +173,6 @@ class Checker:
             if all_ok:
                 self.record("PASS", "Feature branch & Rebase work", f"พบ {', '.join(feature_branches)} ({total_ahead} commit(s) ต่อปลาย main เป็นเส้นตรง)")
         else:
-            # กรณี merge PR เข้า main และลบ feature/* ทิ้งไปแล้วใน Lab 02+
             merged_done = False
             if self.gh_ready():
                 pr_c, pr_o, _ = run_cmd(["gh", "pr", "list", "--state", "merged", "--limit", "1", "--json", "number"], self.repo_root)
@@ -342,15 +355,16 @@ class Checker:
 
 
 def main() -> int:
+    default_root, default_project = detect_default_paths()
     parser = argparse.ArgumentParser(description="Verify ESP32 Git & CI/CD Workshop exercises")
     parser.add_argument("--module", type=int, choices=range(1, 7), help="ตรวจเฉพาะ Module ที่ระบุ (1-6; สำหรับ Lab 00 ใช้ check_env.py)")
     parser.add_argument("--all", action="store_true", help="ตรวจครบทั้ง 6 Modules")
-    parser.add_argument("--repo-root", default=".", help="Root ของ Git repository (ค่าเริ่มต้น: .)")
-    parser.add_argument("--project-dir", default="workshop", help="โฟลเดอร์โปรเจกต์ PlatformIO (ค่าเริ่มต้น: workshop)")
+    parser.add_argument("--repo-root", default=None, help="Root ของ Git repository (ตรวจจับให้อัตโนมัติ)")
+    parser.add_argument("--project-dir", default=None, help="โฟลเดอร์โปรเจกต์ PlatformIO (ตรวจจับให้อัตโนมัติ)")
     args = parser.parse_args()
 
-    repo_root = Path(args.repo_root).resolve()
-    project_dir = (repo_root / args.project_dir).resolve()
+    repo_root = Path(args.repo_root).resolve() if args.repo_root else default_root
+    project_dir = Path(args.project_dir).resolve() if args.project_dir else default_project
     if not project_dir.exists():
         print(f"Error: ไม่พบโฟลเดอร์ {project_dir}", file=sys.stderr)
         return 2

@@ -1,24 +1,24 @@
 # แบบฝึกหัดและเกณฑ์ประเมินผล (Exercises & Pass Criteria)
 
 โฟลเดอร์นี้รวมโจทย์ฝึกปฏิบัติทั้ง **6 Modules** (จับคู่กับใบงาน **7 ฉบับ: `LAB00–LAB06`**) สำหรับโปรเจกต์ [workshop/](../workshop) พร้อมระบบตรวจผลแบบ **Hybrid**:
-1. **สคริปต์ตรวจอัตโนมัติ:** รันจากโฟลเดอร์ root ของ Repo ด้วย `uv run exercises/verify.py --module <1-6>` หรือ `--all` (ใช้ `python exercises/verify.py ...` แทนก็ได้เช่นกัน)
+1. **สคริปต์ตรวจอัตโนมัติ:** เปิดโฟลเดอร์ `workshop/` เป็น Workspace หลัก (`code workshop`) แล้วรันจากใน `workshop/` ด้วย `uv run scripts/verify.py --module <1-6>` หรือ `--all` (ใช้ `python scripts/verify.py ...` แทนก็ได้เช่นกัน)
 2. **Visual Checklist:** ตารางเช็กเกณฑ์ผ่านด้วยตาบน GitHub UI / Terminal
    - *หมายเหตุ:* เกณฑ์ออนไลน์ใน Module 2 (Merged PR), Module 5 (CI run) และ Module 6 (GitHub Release) ให้ตรวจดูบนหน้าเว็บ GitHub (แท็บ PR / Actions / Releases) ได้โดยตรง
 
 ---
 
-## วิธีเตรียมเครื่องและใช้งาน `verify.py` (ใช้ `uv` หรือ `python`)
-> **ก่อนเริ่ม Module 1:** ทำตามใบงาน **[LAB00-Environment_Setup.pdf](./labs/LAB00-Environment_Setup.pdf)** ให้เรียบร้อยเพื่อลง `git`, `uv`, `pre-commit`, `platformio`, `esptool`, `gcc`, รัน `check_env.py` ตรวจเครื่อง และพรีโหลดแพ็กเกจ ESP32 ล่วงหน้า จากนั้นใช้คำสั่งด้านล่างเพื่อตรวจผลแต่ละ Module:
+## วิธีเตรียมเครื่องและใช้งาน `verify.py` (รันจากโฟลเดอร์ `workshop/`)
+> **ก่อนเริ่ม Module 1:** ทำตามใบงาน **[LAB00-Environment_Setup.pdf](./labs/LAB00-Environment_Setup.pdf)** ให้เรียบร้อยเพื่อลง `git`, `uv`, `pre-commit`, `platformio`, `esptool`, `gcc`, เปิด `workshop/` เป็น Workspace หลัก (`code workshop`), รัน `scripts/check_env.py` ตรวจเครื่อง และพรีโหลดแพ็กเกจ ESP32 ล่วงหน้า จากนั้นใช้คำสั่งด้านล่างจากในโฟลเดอร์ `workshop/`:
 
 ```powershell
-# 0. เช็กความพร้อมเครื่องก่อนเริ่ม (รายละเอียดการติดตั้งทั้งหมดอยู่ใน LAB 00)
-uv run exercises/check_env.py
+# 0. เช็กความพร้อมเครื่องก่อนเริ่ม (รันจากโฟลเดอร์ workshop/)
+uv run scripts/check_env.py
 
 # 1. ตรวจเฉพาะ Module 1 (ใช้ python แทน uv run ได้เหมือนกัน)
-uv run exercises/verify.py --module 1
+uv run scripts/verify.py --module 1
 
 # 2. ตรวจทั้งหมด Modules 1-6
-uv run exercises/verify.py --all
+uv run scripts/verify.py --all
 ```
 > หมายเหตุ:
 > - ตามโครงสร้าง **Option A** โฟลเดอร์ `.github/` และ `.pre-commit-config.yaml` จะวางไว้ที่ **Root ของ Repo** ส่วนโค้ด PlatformIO อยู่ใน `workshop/` (จึงต้องมี `defaults: run: working-directory: workshop` ในไฟล์ `.yml`)
@@ -38,7 +38,7 @@ uv run exercises/verify.py --all
 - **เกณฑ์ผ่าน:**
   - [ ] มี branch `main` ที่ประวัติเป็นเส้นตรง (Linear History) และมี branch `feature/*` ที่มี commit ใหม่ต่อจาก `main`
   - [ ] ข้อความ commit ขึ้นต้นด้วย `feat:`, `fix:`, `docs:` ฯลฯ ตามมาตรฐาน
-  - [ ] `uv run exercises/verify.py --module 1` ขึ้น `[PASS]`
+  - [ ] `uv run scripts/verify.py --module 1` ขึ้น `[PASS]`
 
 ---
 
@@ -54,7 +54,7 @@ uv run exercises/verify.py --all
   - [ ] หน้า **Issues → New Issue** บน GitHub แสดงฟอร์ม Dropdown/Input/Checkbox จากไฟล์ `.yml`
   - [ ] หน้า PR บน GitHub แสดง Checklist จาก Template อัตโนมัติ
   - [ ] มี PR ที่ถูก Rebase & Merge เข้า `main` แล้ว
-  - [ ] `uv run exercises/verify.py --module 2` ขึ้น `[PASS]`
+  - [ ] `uv run scripts/verify.py --module 2` ขึ้น `[PASS]`
 
 ---
 
@@ -70,7 +70,7 @@ uv run exercises/verify.py --all
 - **เกณฑ์ผ่าน:**
   - [ ] รัน `pre-commit run --all-files` ผ่านทุก hook
   - [ ] Commit ข้อความผิดรูปแบบถูกบล็อกจริง และข้อความถูกต้องผ่านได้
-  - [ ] `uv run exercises/verify.py --module 3` ขึ้น `[PASS]`
+  - [ ] `uv run scripts/verify.py --module 3` ขึ้น `[PASS]`
 
 ---
 
@@ -80,11 +80,11 @@ uv run exercises/verify.py --all
   1. แทนที่เนื้อหาใน `workshop/platformio.ini` (ลบ `; TODO`) เพื่อเพิ่ม `[env:native]` พร้อม `test_build_src = no` และ `test_filter = test_native`
   2. แทนที่เนื้อหาใน `workshop/test/test_native/test_main.cpp` (ลบ `test_starter_example` / `main()` เดิม) เพื่อเขียน Test Cases ทดสอบฟังก์ชันทั้งหมดใน `blink_math` อย่างน้อย 4 test cases
   3. ศึกษาไฟล์ `workshop/test/test_esp32/test_hardware.cpp` ที่มีให้ใน Repo สำหรับเทสบนบอร์ดจริง
-  4. รัน `pio test -d workshop -e native -v` (บน Windows ต้องมี `gcc`/`g++` จาก MinGW/WinLibs ใน PATH — หากไม่มีและลงไม่ได้ ให้ใช้ `pio run -d workshop -e esp32doit-devkit-v1` แล้วตรวจผล `native` บน GitHub Actions ใน Module 5)
+  4. รัน `pio test -e native -v` จากใน `workshop/` (บน Windows ต้องมี `gcc`/`g++` จาก MinGW/WinLibs ใน PATH — หากไม่มีและลงไม่ได้ ให้ใช้ `pio run -e esp32doit-devkit-v1` แล้วตรวจผล `native` บน GitHub Actions ใน Module 5)
 - **เกณฑ์ผ่าน:**
-  - [ ] `pio test -d workshop -e native` แสดงผล `PASSED` ครบทุก test case (หรือขึ้น `[WARN]` ใน `verify.py` หากเครื่องไม่มี `gcc`)
-  - [ ] `pio run -d workshop -e esp32doit-devkit-v1` คอมไพล์ผ่านปกติ
-  - [ ] `uv run exercises/verify.py --module 4` ขึ้น `[PASS]` (ไม่มี `[FAIL]`)
+  - [ ] `pio test -e native` แสดงผล `PASSED` ครบทุก test case (หรือขึ้น `[WARN]` ใน `verify.py` หากเครื่องไม่มี `gcc`)
+  - [ ] `pio run -e esp32doit-devkit-v1` คอมไพล์ผ่านปกติ
+  - [ ] `uv run scripts/verify.py --module 4` ขึ้น `[PASS]` (ไม่มี `[FAIL]`)
 
 ---
 
@@ -99,7 +99,7 @@ uv run exercises/verify.py --all
   - [ ] อธิบายความหมายของ `on`, `defaults.run.working-directory`, `jobs`, `needs`, `uses`, `with`, `run`, `if` ใน `ci.yml` ได้
   - [ ] แท็บ GitHub Actions แสดงเครื่องหมายถูกสีเขียวครบทั้ง 3 jobs
   - [ ] เมื่อสร้าง branch `release/v1.0.0` มี Artifact `rc-firmware-*` ให้ดาวน์โหลด
-  - [ ] `uv run exercises/verify.py --module 5` ขึ้น `[PASS]`
+  - [ ] `uv run scripts/verify.py --module 5` ขึ้น `[PASS]`
 
 ### แบบฝึกหัดเสริม (Break & Fix Lab): จำลอง CI พัง & Merge Conflict
 1. **CI แดง:** ลองแก้ `test_add_numbers_positive` ใน `workshop/test/test_native/test_main.cpp` ให้คาดหวังค่าผิด (เช่น `TEST_ASSERT_EQUAL_INT(99, ...)`) แล้ว Push เข้า PR → ดู CI ขึ้น ❌ สีแดงและบล็อก Merge → อ่าน Log แก้กลับเป็น `5` แล้ว Push จนเขียว ✅
@@ -130,4 +130,4 @@ uv run exercises/verify.py --all
 - **เกณฑ์ผ่าน:**
   - [ ] หน้า **Releases** บน GitHub มีเวอร์ชัน `v1.0.0` พร้อม Release Notes อัตโนมัติ
   - [ ] มีไฟล์แนบครบทั้ง `esp32doit-v1.0.0-firmware.bin` และ `esp32doit-v1.0.0-merged-firmware.bin`
-  - [ ] `uv run exercises/verify.py --all` ขึ้น `[PASS]` ครบทุกข้อที่ทำได้ (หรือ `[WARN]` 1 ข้อกรณีไม่มี `gcc`)
+  - [ ] `uv run scripts/verify.py --all` ขึ้น `[PASS]` ครบทุกข้อที่ทำได้ (หรือ `[WARN]` 1 ข้อกรณีไม่มี `gcc`)

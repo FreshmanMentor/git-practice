@@ -405,6 +405,8 @@ name: Feature Request (ขอฟีเจอร์ใหม่)
 description: เสนอฟีเจอร์ใหม่หรือการปรับปรุงสำหรับโปรเจกต์ ESP32
 title: "[Feat]: "
 labels: ["enhancement"]
+
+# โครงสร้างฟอร์มรับข้อมูลฟีเจอร์ใหม่
 body:
   - type: textarea
     id: problem
@@ -412,12 +414,14 @@ body:
       label: ปัญหาหรือความต้องการ (Why)
       placeholder: เช่น ต้องการปรับความถี่ไฟกระพริบตามค่า Input
     validations: { required: true }
+
   - type: textarea
     id: solution
     attributes:
       label: แนวทางที่เสนอ (How)
       placeholder: เพิ่มฟังก์ชันใน lib/blink_math/ และเขียน Unit Test รองรับ
     validations: { required: true }
+
   - type: dropdown
     id: target_branch
     attributes:
@@ -560,6 +564,7 @@ uv run scripts/verify.py --module 2""",
                 ],
                 "code": """# [Ctrl+A ลบเนื้อหาเดิมใน .pre-commit-config.yaml แล้ววางส่วนที่ 1-3 ต่อกัน]
 repos:
+  # ตรวจช่องว่างท้ายบรรทัด, บรรทัดปิดไฟล์, YAML และขนาดไฟล์
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
@@ -575,7 +580,8 @@ repos:
                     "วางต่อท้ายลงใน <code>repos:</code> ของ <code>.pre-commit-config.yaml</code>",
                     "Hook นี้จะอ้างอิงกติกาจากไฟล์ <code>.clang-format</code> ที่มีใน Repo แล้ว (Google Style, IndentWidth: 2, ColumnLimit: 100)",
                 ],
-                "code": """  - repo: https://github.com/pre-commit/mirrors-clang-format
+                "code": """  # จัดรูปแบบโค้ด C/C++ อัตโนมัติตามไฟล์ .clang-format
+  - repo: https://github.com/pre-commit/mirrors-clang-format
     rev: v23.1.5
     hooks:
       - id: clang-format
@@ -587,7 +593,8 @@ repos:
                     "วางต่อท้ายลงใน <code>repos:</code> เพื่อตรวจหัวข้อ Commit ใน Stage <code>commit-msg</code>",
                     "<em>หมายเหตุ:</em> คำสั่ง <code>pre-commit run --all-files</code> จะรันเฉพาะ Hook ตรวจไฟล์ ส่วน <code>conventional-pre-commit</code> จะทำงานตอนสั่ง <code>git commit</code>",
                 ],
-                "code": """  - repo: https://github.com/compilerla/conventional-pre-commit
+                "code": """  # ตรวจรูปแบบหัวข้อ Commit ให้ตรงตาม Conventional Commits
+  - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v4.5.0
     hooks:
       - id: conventional-pre-commit
@@ -702,6 +709,7 @@ uv run scripts/verify.py --module 3""",
                     "วางบล็อกโค้ดด้านล่างแทน (ห้ามวางต่อท้าย มิฉะนั้นจะ Error <code>section 'env:esp32doit-devkit-v1' already exists</code>)",
                 ],
                 "code": """; [Ctrl+A ลบเนื้อหาเดิมทั้งหมดใน workshop/platformio.ini แล้ววางแทน]
+; สภาพแวดล้อมสำหรับบอร์ดจริง DOIT ESP32 DevKit v1
 [env:esp32doit-devkit-v1]
 platform = espressif32
 board = esp32doit-devkit-v1
@@ -709,6 +717,7 @@ framework = arduino
 monitor_speed = 115200
 test_filter = test_esp32
 
+; สภาพแวดล้อมสำหรับรัน Unit Test บนเครื่องคอมพิวเตอร์ (ไม่ต้องต่อบอร์ด)
 [env:native]
 platform = native
 test_build_src = no
@@ -725,25 +734,30 @@ test_filter = test_native""",
 #include <unity.h>
 #include "blink_math.h"
 
+// ฟังก์ชันเตรียมและล้างค่าก่อน/หลังรันแต่ละ Test Case
 void setUp(void) {}
 void tearDown(void) {}
 
+// ทดสอบการบวกเลขจำนวนเต็ม
 void test_add_numbers_positive(void) {
   TEST_ASSERT_EQUAL_INT(5, blink_math::add_numbers(2, 3));
   TEST_ASSERT_EQUAL_INT(0, blink_math::add_numbers(-4, 4));
 }
 
+// ทดสอบการจำกัดช่วงเวลากระพริบให้อยู่ในช่วง 100-5000 ms
 void test_clamp_interval_bounds(void) {
   TEST_ASSERT_EQUAL_INT(100, blink_math::clamp_interval(20));
   TEST_ASSERT_EQUAL_INT(500, blink_math::clamp_interval(500));
   TEST_ASSERT_EQUAL_INT(5000, blink_math::clamp_interval(9999));
 }
 
+// ทดสอบการสลับสถานะ LED (0 <-> 1)
 void test_next_led_state_toggles(void) {
   TEST_ASSERT_EQUAL_UINT8(1, blink_math::next_led_state(0));
   TEST_ASSERT_EQUAL_UINT8(0, blink_math::next_led_state(1));
 }
 
+// ทดสอบการคำนวณคาบเวลารวมของ 1 รอบการกระพริบ
 void test_calculate_cycle_ms(void) {
   TEST_ASSERT_EQUAL_INT(1000, blink_math::calculate_cycle_ms(400, 600));
   TEST_ASSERT_EQUAL_INT(100, blink_math::calculate_cycle_ms(10, 10));
@@ -891,17 +905,23 @@ defaults:
                     "ขอ Cloud Linux VM (<code>ubuntu-latest</code>)",
                     "ดึงโค้ดด้วย <code>checkout@v7</code>, ตั้งค่า Python/uv ด้วย <code>setup-uv@v10.3.3</code> และรัน <code>pre-commit/action@v3.0.1</code>",
                 ],
-                "code": """jobs:
+                "code": """# Job 1: ตรวจรูปแบบโค้ดและ YAML ด้วย Pre-commit
+jobs:
   lint:
     name: Code Format & Lint Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10.3.3
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup uv and Python
+        uses: astral-sh/setup-uv@v10.3.3
         with:
           python-version: '3.12'
           enable-cache: false
-      - uses: pre-commit/action@v3.0.1""",
+
+      - name: Run pre-commit hooks
+        uses: pre-commit/action@v3.0.1""",
             },
             {
                 "heading": "L-01 (ส่วนที่ 3/4): ci.yml — ต่อท้าย Job 2 (unit-test: รัน Unity Test หลัง lint ผ่าน)",
@@ -909,20 +929,32 @@ defaults:
                     "ใช้ <code>needs: lint</code> เพื่อรอ Job แรกผ่านก่อน",
                     "Cache โฟลเดอร์ <code>~/.platformio/.cache</code> ผูก Key กับ <code>workshop/platformio.ini</code> แล้วรัน <code>pio test -e native -v</code>",
                 ],
-                "code": """  unit-test:
+                "code": """  # Job 2: รัน Native Unit Test หลังจาก Job lint ผ่าน
+  unit-test:
     name: Native Unit Tests (Unity)
     runs-on: ubuntu-latest
     needs: lint
     steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10.3.3
-        with: { python-version: '3.12', enable-cache: false }
-      - uses: actions/cache@v6
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup uv and Python
+        uses: astral-sh/setup-uv@v10.3.3
+        with:
+          python-version: '3.12'
+          enable-cache: false
+
+      - name: Cache PlatformIO native packages
+        uses: actions/cache@v6
         with:
           path: ~/.platformio/.cache
           key: ${{ runner.os }}-pio-native-${{ hashFiles('workshop/platformio.ini') }}
-      - run: uv tool install platformio
-      - run: pio test -e native -v""",
+
+      - name: Install PlatformIO CLI
+        run: uv tool install platformio
+
+      - name: Run native unit tests
+        run: pio test -e native -v""",
             },
             {
                 "heading": "L-01 (ส่วนที่ 4/4): ci.yml — ต่อท้าย Job 3 (build-esp32: คอมไพล์ .bin & Upload Artifact)",
@@ -930,21 +962,35 @@ defaults:
                     "รอ <code>needs: unit-test</code> แล้วคอมไพล์เฟิร์มแวร์จริง <code>esp32doit-devkit-v1</code>",
                     "หากเป็น Branch <code>release/**</code> ให้แนบไฟล์ <code>.bin</code> เก็บไว้ด้วย <code>upload-artifact@v7</code>",
                 ],
-                "code": """  build-esp32:
+                "code": """  # Job 3: คอมไพล์เฟิร์มแวร์ ESP32 หลังจาก Job unit-test ผ่าน
+  build-esp32:
     name: Build Firmware (esp32doit-devkit-v1)
     runs-on: ubuntu-latest
     needs: unit-test
     steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10.3.3
-        with: { python-version: '3.12', enable-cache: false }
-      - uses: actions/cache@v6
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup uv and Python
+        uses: astral-sh/setup-uv@v10.3.3
+        with:
+          python-version: '3.12'
+          enable-cache: false
+
+      - name: Cache PlatformIO ESP32 toolchain
+        uses: actions/cache@v6
         with:
           path: ~/.platformio
           key: ${{ runner.os }}-pio-esp32-${{ hashFiles('workshop/platformio.ini') }}
-      - run: uv tool install platformio
-      - run: pio run -e esp32doit-devkit-v1
-      - if: startsWith(github.ref, 'refs/heads/release/')
+
+      - name: Install PlatformIO CLI
+        run: uv tool install platformio
+
+      - name: Build ESP32 firmware
+        run: pio run -e esp32doit-devkit-v1
+
+      - name: Upload release candidate binaries
+        if: startsWith(github.ref, 'refs/heads/release/')
         uses: actions/upload-artifact@v7
         with:
           name: rc-firmware-${{ github.sha }}
@@ -1053,23 +1099,37 @@ defaults:
                     "ติดตั้ง <code>platformio</code> และ <code>esptool</code> ด้วย <code>uv tool install</code>",
                     "รัน <code>pio test -e native</code> ซ้ำอีกครั้งก่อนสั่ง Compile ไฟล์ <code>.bin</code>",
                 ],
-                "code": """jobs:
+                "code": """# Job สำหรับทดสอบและคอมไพล์เฟิร์มแวร์เมื่อมี Tag เวอร์ชัน
+jobs:
   release:
     name: Build & Publish ESP32 Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10.3.3
-        with: { python-version: '3.12', enable-cache: false }
-      - uses: actions/cache@v6
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup uv and Python
+        uses: astral-sh/setup-uv@v10.3.3
+        with:
+          python-version: '3.12'
+          enable-cache: false
+
+      - name: Cache PlatformIO ESP32 toolchain
+        uses: actions/cache@v6
         with:
           path: ~/.platformio
           key: ${{ runner.os }}-pio-esp32-${{ hashFiles('workshop/platformio.ini') }}
-      - run: |
+
+      - name: Install PlatformIO and esptool
+        run: |
           uv tool install platformio
           uv tool install esptool
-      - run: pio test -e native
-      - run: pio run -e esp32doit-devkit-v1""",
+
+      - name: Run native unit tests
+        run: pio test -e native
+
+      - name: Build ESP32 firmware
+        run: pio run -e esp32doit-devkit-v1""",
             },
             {
                 "heading": "L-01 (ส่วนที่ 3/3): release.yml — ต่อท้ายด้วย esptool merge-bin & action-gh-release",

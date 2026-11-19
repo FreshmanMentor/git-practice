@@ -1191,14 +1191,14 @@ TEMPLATE = """<!DOCTYPE html>
         content: "ESP32 Git, Testing & CI/CD Workshop\\A Dept. Computer Engineering / PlatformIO Lab";
         white-space: pre;
         font-family: "Sarabun", sans-serif;
-        font-size: 9pt;
+        font-size: 14pt;
         color: #475569;
         text-align: right;
       }}
       @bottom-right {{
         content: "Page " counter(page) " of " counter(pages);
         font-family: "Sarabun", sans-serif;
-        font-size: 9.5pt;
+        font-size: 14pt;
         color: #334155;
       }}
     }}
@@ -1219,13 +1219,13 @@ TEMPLATE = """<!DOCTYPE html>
       border-bottom: 1.5px solid #1e3a8a;
       padding-bottom: 6px;
       margin-bottom: 14px;
-      font-size: 10pt;
+      font-size: 14pt;
       color: #475569;
     }}
     .doc-header .left {{
       font-weight: 700;
       color: #1e3a8a;
-      font-size: 11pt;
+      font-size: 14pt;
     }}
     h1.lab-title {{
       text-align: center;
@@ -1270,7 +1270,7 @@ TEMPLATE = """<!DOCTYPE html>
     }}
     code {{
       font-family: "Sarabun", sans-serif;
-      font-size: 13.5pt;
+      font-size: 14pt;
       background: #f1f5f9;
       padding: 1px 4px;
       border-radius: 3px;
@@ -1290,7 +1290,7 @@ TEMPLATE = """<!DOCTYPE html>
       padding: 10px 14px;
       margin: 14pt 0 14pt 12px;
       font-family: "Sarabun", sans-serif;
-      font-size: 11.5pt;
+      font-size: 14pt;
       line-height: 1.45;
       white-space: pre-wrap;
       word-break: break-word;
@@ -1305,7 +1305,7 @@ TEMPLATE = """<!DOCTYPE html>
       padding: 10px 14px;
       margin: 14pt 0 14pt 12px;
       font-family: "Sarabun", sans-serif;
-      font-size: 11pt;
+      font-size: 14pt;
       line-height: 1.45;
       white-space: pre-wrap;
       word-break: break-word;
@@ -1343,7 +1343,7 @@ TEMPLATE = """<!DOCTYPE html>
       border: 1px solid #e2e8f0;
     }}
     .shot-cap {{
-      font-size: 12.5pt;
+      font-size: 14pt;
       color: #334155;
       margin-top: 6px;
     }}

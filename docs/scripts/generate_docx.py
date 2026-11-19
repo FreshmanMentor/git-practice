@@ -158,7 +158,7 @@ def add_code_box(doc: Document, code_text: str, dark: bool = False) -> None:
     set_run_font(
         run,
         FONT_MONO,
-        11.5,
+        BODY_SIZE,
         color=RGBColor(0xE2, 0xE8, 0xF0) if dark else RGBColor(0x0F, 0x17, 0x2A),
     )
     _ensure_blank_lines(doc, 1)
@@ -180,7 +180,7 @@ def add_picture_block(doc: Document, img_path: Path, caption: str, width_inches:
     p_cap.paragraph_format.space_before = Pt(0)
     p_cap.paragraph_format.space_after = Pt(2)
     rc = p_cap.add_run(caption)
-    set_run_font(rc, FONT_THAI, 12.5, italic=True, color=RGBColor(0x33, 0x41, 0x55))
+    set_run_font(rc, FONT_THAI, BODY_SIZE, italic=True, color=RGBColor(0x33, 0x41, 0x55))
 
     _ensure_blank_lines(doc, 1)
 
@@ -239,12 +239,12 @@ def build_docx(lab: dict) -> Path:
     hdr = section.header.paragraphs[0]
     hdr.alignment = WD_ALIGN_PARAGRAPH.RIGHT
     hrun = hdr.add_run("DOIT ESP32 DevKit v1 • PlatformIO Workshop | Git, Pre-commit, Testing & CI/CD")
-    set_run_font(hrun, FONT_THAI, 10.0, color=RGBColor(0x47, 0x55, 0x69))
+    set_run_font(hrun, FONT_THAI, BODY_SIZE, color=RGBColor(0x47, 0x55, 0x69))
 
     ftr = section.footer.paragraphs[0]
     ftr.alignment = WD_ALIGN_PARAGRAPH.RIGHT
     frun = ftr.add_run(f"{lab['slug']} — Student Worksheet (.docx)")
-    set_run_font(frun, FONT_THAI, 10.0, color=RGBColor(0x47, 0x55, 0x69))
+    set_run_font(frun, FONT_THAI, BODY_SIZE, color=RGBColor(0x47, 0x55, 0x69))
 
     # Title
     title_p = doc.add_paragraph()

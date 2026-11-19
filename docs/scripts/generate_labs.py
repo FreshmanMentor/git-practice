@@ -57,9 +57,8 @@ LABS = [
                     ("../images/anno-00-vscode-platformio.png", "หน้าติดตั้ง Extension PlatformIO IDE: [1] กดปุ่ม Install แล้วรอตัวโหลดมุมขวาล่างจนเสร็จ"),
                     ("../images/anno-02-vscode-pr.png", "หน้าติดตั้ง Extension GitHub Pull Requests: [1] กดปุ่ม Install เพื่อใช้เปิด PR จากใน VS Code"),
                 ],
-                "code": """# 1. Windows: ติดตั้ง Git และ Visual Studio Code (หากยังไม่มีในเครื่อง)
+                "code": """# 1. Windows: ติดตั้ง Git (หากยังไม่มีในเครื่อง)
 winget install Git.Git
-winget install Microsoft.VisualStudioCode
 git --version
 
 # 2. ใน VS Code กด Ctrl+Shift+X ค้นหาและติดตั้ง Extension 2 ตัวนี้:

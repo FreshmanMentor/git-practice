@@ -165,7 +165,7 @@ class Checker:
                 _, ahead_out, _ = run_cmd(["git", "log", f"main..{fb}", "--pretty=format:%s"], self.repo_root)
                 ahead_msgs = [m for m in ahead_out.splitlines() if m.strip()]
                 if anc_code != 0:
-                    self.record("FAIL", "Feature branch rebase", f"branch {fb} ยังไม่ได้ rebase ต่อจากปลาย main ล่าสุด (รัน git rebase upstream/main)")
+                    self.record("FAIL", "Feature branch rebase", f"branch {fb} ยังไม่ได้ rebase ต่อจากปลาย main ล่าสุด (รัน git rebase origin/main)")
                     all_ok = False
                     break
                 if not ahead_msgs:
@@ -186,12 +186,12 @@ class Checker:
                 if pr_c == 0 and pr_o and pr_o != "[]":
                     merged_done = True
             if not merged_done:
-                up_c, up_o, _ = run_cmd(["git", "log", "upstream/main..main", "--pretty=format:%s"], self.repo_root)
+                head_c, head_o, _ = run_cmd(["git", "log", "-n", "1", "--pretty=format:%s"], self.repo_root)
                 ref_c, ref_o, _ = run_cmd(["git", "reflog", "-n", "40"], self.repo_root)
                 has_branch_history = ref_c == 0 and any(
                     ("moving from feature/" in line or "rebase (finish)" in line) for line in ref_o.splitlines()
                 )
-                if up_c == 0 and up_o.strip() and has_branch_history:
+                if head_c == 0 and CONVENTIONAL_RE.match(head_o.strip()) and has_branch_history:
                     merged_done = True
             if merged_done:
                 self.record("PASS", "Feature branch & Rebase work", "merge งานเข้า main เรียบร้อยแล้ว (และลบ branch ย่อยแล้ว)")

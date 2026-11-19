@@ -34,7 +34,7 @@ LABS = [
             "โปรแกรม Visual Studio Code (VS Code) และบัญชี GitHub ส่วนตัว",
             "<code>PATH</code> = รายชื่อโฟลเดอร์ที่ Terminal ใช้ค้นหาคำสั่ง",
             "<code>uv</code> = ตัวจัดการ Python แบบ Local ต่อโปรเจกต์ (ติดตั้งแพ็กเกจไว้ใน <code>workshop/.venv</code> ไม่ปนกับเครื่องภายนอก)",
-            "<code>origin</code> = Repo Fork ของคุณเองบน GitHub ส่วน <code>upstream</code> = Repo ต้นทางของอาจารย์",
+            "<code>origin</code> = Repo Fork ของคุณเองบน GitHub (ใช้เป็น Remote หลักตลอดเวิร์กชอป)",
             "สคริปต์ตรวจความพร้อม (รันจากโฟลเดอร์ <code>workshop</code>): <code>uv run scripts/check_env.py</code>",
         ],
         "experiments": [
@@ -93,7 +93,7 @@ winget install BrechtSanders.WinLibs.POSIX.UCRT
                     "บนหน้า Fork ของตัวเอง ให้กดแท็บ <strong>Actions</strong> แล้วกดปุ่มสีเขียว <strong>I understand my workflows, go ahead and enable them</strong>",
                     "กลับมาที่แท็บ <strong>Code</strong> กด <code>[2] &lt;&gt; Code</code> เพื่อ Copy URL ของ Fork ตัวเอง",
                     "Clone ลงในโฟลเดอร์พาทสั้นๆ (เช่น <code>C:\\ws</code>) แล้วเข้า <code>cd git-practice</code>",
-                    "เพิ่ม <code>upstream</code> ชี้ไปที่ Repo อาจารย์, ตั้งค่า <code>user.name</code> / <code>user.email</code> แบบ <code>--local</code> และเข้า <code>cd workshop</code> เปิดเป็น Workspace หลัก",
+                    "ตั้งค่า <code>user.name</code> / <code>user.email</code> แบบ <code>--local</code> และเข้า <code>cd workshop</code> เปิดเป็น Workspace หลัก",
                     "รัน <code>uv sync</code> เพื่อติดตั้ง <code>pre-commit</code>, <code>platformio</code> และ <code>esptool</code> แบบ Local ลงใน <code>workshop/.venv</code>",
                 ],
                 "images": [
@@ -105,8 +105,7 @@ cd C:\\ws
 git clone https://github.com/<your-username>/git-practice.git
 cd git-practice
 
-# 2. เพิ่ม upstream อ้างอิง Repo อาจารย์ และตั้งชื่อผู้เขียนแบบ --local (ปลอดภัยบนเครื่องรวม):
-git remote add upstream https://github.com/SavEe2429/git-practice.git
+# 2. ตั้งชื่อผู้เขียนแบบ --local (ปลอดภัยบนเครื่องรวม):
 git config --local user.name "Your Name"
 git config --local user.email "you@example.com"
 
@@ -174,61 +173,30 @@ uv run pio run -e esp32doit-devkit-v1""",
         "slug": "LAB01-Linear_Git_Rebase",
         "title": "Lab 01: Linear Git (Rebase), Fork Workflow &amp; Conventional Commits",
         "objectives": [
-            "เข้าใจความแตกต่างระหว่าง <code>origin</code> (Fork ของตัวเอง) กับ <code>upstream</code> (Repo ต้นทางของอาจารย์)",
-            "เรียนรู้การรักษาประวัติ Commit บน <code>main</code> ให้เป็นเส้นตรงด้วย <code>git rebase upstream/main</code>, การแก้ Conflict และการ Push ด้วย <code>--force-with-lease</code>",
+            "เข้าใจการทำงานบน Fork (<code>origin</code>) ร่วมกับ Feature Branch เพื่อให้ประวัติเป็นเส้นตรงและไม่ชนกับผู้อื่น",
+            "เรียนรู้การรักษาประวัติ Commit บน <code>main</code> ให้เป็นเส้นตรงด้วย <code>git rebase origin/main</code>, การแก้ Conflict และการ Push ด้วย <code>--force-with-lease</code>",
         ],
         "outcomes": [
-            "ตรวจสอบสถานะ <code>origin</code> / <code>upstream</code> และอัปเดตฐานโค้ดล่าสุดจาก <code>upstream/main</code> ได้ถูกต้อง",
             "แตก Branch <code>feature/*</code> จาก <code>main</code>, เขียน Commit แบบ Conventional Commits, แก้ Rebase Conflict และ Push ด้วย <code>--force-with-lease</code> ได้",
             "ตรวจสอบประวัติด้วย <code>git log --graph --oneline --decorate</code> แล้วเห็นโครงสร้างเส้นตรง (Linear History)",
         ],
         "tools": [
             "เครื่องมือทั้งหมดติดตั้งและผ่านการตรวจจาก <strong>Lab 00</strong> เรียบร้อยแล้ว",
-            "Repository ต้นทาง (<code>upstream</code>): <code>https://github.com/SavEe2429/git-practice</code>",
+            "Repository ต้นแบบของอาจารย์: <code>https://github.com/SavEe2429/git-practice</code> (Fork มาเป็น <code>origin</code> ของตัวเองแล้ว)",
             "วิดีโอประกอบ: <code>videos/01-gitflow-branching.mp4</code>",
         ],
         "experiments": [
-            ("L-01", "เปรียบเทียบกราฟ Merge vs Rebase, ตรวจ <code>origin</code> vs <code>upstream</code> และซิงก์ <code>main</code> ให้ทัน <code>upstream/main</code>"),
-            ("L-02", "แตก <code>feature/fast-blink</code> ด้วย <code>git switch -c</code>, แก้ <code>workshop/src/main.cpp</code>, Commit และ Rebase บน <code>upstream/main</code>"),
-            ("L-03", "วิธีแก้ Rebase Conflict, ออกจากหน้าจอ Vim และการ Push หลัง Rebase ด้วย <code>--force-with-lease</code>"),
+            ("L-01", "แตก <code>feature/fast-blink</code> ด้วย <code>git switch -c</code>, แก้ <code>workshop/src/main.cpp</code>, Commit และ Rebase บน <code>origin/main</code>"),
+            ("L-02", "วิธีแก้ Rebase Conflict, ออกจากหน้าจอ Vim และการ Push หลัง Rebase ด้วย <code>--force-with-lease</code>"),
         ],
         "details": [
             {
-                "heading": "L-01: เปรียบเทียบกราฟ Merge vs Rebase และตรวจ Remote (origin vs upstream)",
-                "steps": [
-                    "<code>origin</code> คือ Fork บนบัญชีคุณเอง (ไม่ขยับถ้าคุณไม่ Push)",
-                    "<code>upstream</code> คือ Repo ต้นทางที่มีโค้ดใหม่จากอาจารย์หรือเพื่อนร่วมทีม",
-                    "การใช้ <code>git rebase</code> จะยก Commit ของเราไปต่อท้าย <code>upstream/main</code> ทำให้ประวัติเป็นเส้นตรงเส้นเดียว (ต่างจาก <code>git merge</code> ที่แตกเป็น 2 เส้นแล้วรวบกลับ)",
-                    "<em>หมายเหตุ PowerShell 5.1:</em> ข้อความของ <code>git</code> ที่ออก stderr อาจขึ้นตัวสีแดงแม้คำสั่งสำเร็จ ให้อ่านข้อความจริงก่อนเสมอ",
-                ],
-                "images": [
-                    ("../images/anno-01-repo-fork.png", "หน้าเว็บ GitHub (อ้างอิงจาก Lab 00): [1] Fork เป็นบัญชีตัวเอง -> [2] <> Code คัดลอก URL"),
-                ],
-                "code": """# ภาพเปรียบเทียบใน git log --graph:
-# [Merge - แตกเป็น 2 เส้น]       [Rebase - เส้นตรงเส้นเดียว]
-#   *   Merge branch 'feat'        * C3' (HEAD -> feature/fast-blink)
-#   |\\                             * C2' (upstream/main, main)
-#   | * C3 (feature)               * C1  chore: initial starter
-#   * | C2 (upstream/main)
-#   |/
-#   * C1
-
-# 1. เข้าโฟลเดอร์ Workspace workshop แล้วตรวจ Remote ทั้ง 2 ตัว:
-cd C:\\ws\\git-practice\\workshop
-git remote -v
-
-# 2. อัปเดต main ของเครื่องและ Fork ให้ตรงกับ upstream/main ล่าสุด:
-git switch main
-git pull --rebase upstream main
-git push origin main""",
-            },
-            {
-                "heading": "L-02: แตก Feature Branch, แก้ workshop/src/main.cpp, Commit &amp; Rebase",
+                "heading": "L-01: แตก Feature Branch, แก้ workshop/src/main.cpp, Commit &amp; Rebase",
                 "steps": [
                     "แตก Branch ใหม่ชื่อ <code>feature/fast-blink</code> จาก <code>main</code> ด้วย <code>git switch -c</code>",
                     "เปิดไฟล์ <code>workshop/src/main.cpp</code> แล้วแก้บรรทัดที่ 15 จาก <code>clamp_interval(500)</code> เป็น <code>200</code>",
                     "Stage ไฟล์และ Commit ด้วยรูปแบบ Conventional Commits (<code>feat(blink): ...</code>)",
-                    "ดึงฐานล่าสุดจาก <code>upstream</code> แล้ว Rebase ต่อท้าย <code>upstream/main</code>",
+                    "ดึงฐานล่าสุดจาก <code>origin</code> แล้ว Rebase ต่อท้าย <code>origin/main</code>",
                 ],
                 "code": """# 1. แตก branch ใหม่จาก main
 git switch -c feature/fast-blink main
@@ -239,16 +207,16 @@ git switch -c feature/fast-blink main
 git add src/main.cpp
 git commit -m "feat(blink): support fast blink interval"
 
-# 3. ดึงฐานล่าสุดจาก upstream (Repo อาจารย์) แล้ว Rebase:
-git fetch upstream
-git rebase upstream/main
+# 3. ดึงฐานล่าสุดจาก origin แล้ว Rebase:
+git fetch origin
+git rebase origin/main
 git log --graph --oneline --decorate -n 6""",
             },
             {
-                "heading": "L-03: การแก้ Rebase Conflict, ออกจาก Vim และ Push ด้วย --force-with-lease",
+                "heading": "L-02: การแก้ Rebase Conflict, ออกจาก Vim และ Push ด้วย --force-with-lease",
                 "steps": [
                     "ตั้งค่า Editor ของ repo ให้เปิดด้วย VS Code (<code>code --wait</code>) เพื่อลดปัญหาติดหน้าจอ Vim",
-                    "<strong>สำคัญมากระหว่าง <code>git rebase</code>:</strong> สัญลักษณ์ <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> คือ<strong>โค้ดฝั่ง <code>upstream/main</code> (ฐานใหม่)</strong> ส่วนด้านล่าง <code>=======</code> คือ<strong>โค้ด Commit ของเรา</strong>",
+                    "<strong>สำคัญมากระหว่าง <code>git rebase</code>:</strong> สัญลักษณ์ <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> คือ<strong>โค้ดฝั่ง <code>origin/main</code> (ฐานใหม่)</strong> ส่วนด้านล่าง <code>=======</code> คือ<strong>โค้ด Commit ของเรา</strong>",
                     "หลังลบเส้นแบ่ง Conflict และเก็บโค้ดที่ถูกต้องแล้ว ให้ Stage ไฟล์ด้วย <code>git add</code> แล้วรัน <code>git rebase --continue</code>",
                     "หากเผลอเข้าหน้า Vim ให้พิมพ์ <code>:wq</code> แล้วกด Enter (หรือถอยกลับก่อน Rebase ด้วย <code>git rebase --abort</code>)",
                     "Push หลัง Rebase ด้วย <code>git push --force-with-lease</code> (<strong>ห้าม</strong>รัน <code>git pull</code> ตามคำแนะนำ error และ<strong>ห้าม</strong> force-push เข้า <code>main</code> เด็ดขาด)",
@@ -256,7 +224,7 @@ git log --graph --oneline --decorate -n 6""",
                 "code": """# --- แนะนำตั้ง Editor เป็น VS Code ก่อนกันติดหน้าจอ Vim ---
 git config --local core.editor "code --wait"
 
-# --- หากเกิด CONFLICT ระหว่าง git rebase upstream/main ---
+# --- หากเกิด CONFLICT ระหว่าง git rebase origin/main ---
 # 1. เปิดไฟล์ที่มีปัญหา ลบเส้น <<<<<<< HEAD, =======, >>>>>>> แล้วเก็บโค้ดที่ถูกต้อง
 # 2. Stage ไฟล์ที่แก้แล้ว แล้วทำ Rebase ต่อ:
 git add src/main.cpp
@@ -267,27 +235,20 @@ git rebase --continue
 git push --force-with-lease -u origin feature/fast-blink""",
             },
         ],
-        "expected_output": """$ git remote -v
-origin    https://github.com/<your-username>/git-practice.git (fetch)
-origin    https://github.com/<your-username>/git-practice.git (push)
-upstream  https://github.com/SavEe2429/git-practice.git (fetch)
-upstream  https://github.com/SavEe2429/git-practice.git (push)
-
-$ git log --graph --oneline --decorate -n 4
+        "expected_output": """$ git log --graph --oneline --decorate -n 4
 * 9a4c21e (HEAD -> feature/fast-blink, origin/feature/fast-blink) feat(blink): support fast blink interval
-* 7c796a2 (upstream/main, origin/main, main) chore(workshop): restore starter skeleton files for student labs 02-06
+* 7c796a2 (origin/main, main) chore(workshop): restore starter skeleton files for student labs 02-06
 * f75e649 docs(workshop): add Lab 00 setup, consolidate installs, update slides and screenshots""",
         "results": [
-            "L-01: ผลลัพธ์จากการรัน <code>git remote -v</code> (แสดงครบทั้ง <code>origin</code> และ <code>upstream</code>)",
-            "L-02: ผลลัพธ์จาก <code>git log --graph --oneline --decorate -n 6</code> (เป็นเส้นตรงเส้นเดียวหรือไม่)",
+            "L-01: ผลลัพธ์จาก <code>git log --graph --oneline --decorate -n 6</code> (เป็นเส้นตรงเส้นเดียวหรือไม่)",
         ],
         "questions": [
-            "Q1: การทำงานแบบ Fork Workflow (แยก <code>origin</code> ออกจาก <code>upstream</code>) มีข้อดีทางวิศวกรรมอย่างไรเมื่อเทียบกับการ Push เข้า Repo หลักโดยตรง?",
+            "Q1: การทำงานบน Fork ของตัวเอง (<code>origin</code>) ร่วมกับ Feature Branch มีข้อดีทางวิศวกรรมอย่างไรเมื่อเทียบกับการ Push เข้า <code>main</code> โดยตรง?",
             "Q2: การใช้ <code>git rebase</code> แตกต่างจาก <code>git merge</code> อย่างไรในหน้าตาของ <code>git log --graph</code>?",
             "Q3: เหตุใดหลัง <code>git rebase</code> แล้วจึงต้องใช้ <code>git push --force-with-lease</code> แทน <code>git pull</code> หรือ <code>git push --force</code>?",
         ],
         "exercise": {
-            "code": "L-04",
+            "code": "L-03",
             "steps": [
                 "ตรวจสอบว่าอยู่บน Branch <code>feature/fast-blink</code> ที่มี Commit ใหม่ต่อปลาย <code>main</code> แบบเส้นตรง",
                 "รัน <code>uv run scripts/verify.py --module 1</code> จากในโฟลเดอร์ <code>workshop</code> เพื่อตรวจผล Lab 01",

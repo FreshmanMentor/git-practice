@@ -29,12 +29,12 @@ uv run scripts/verify.py --all
 ## แบบฝึกหัดทั้ง 6 Modules
 
 ### Module 1: Linear History (Rebase), Fork Workflow & Conventional Commits
-**เป้าหมาย:** Fork Repo เพื่อแยกพื้นที่ทำงาน (รองรับผู้เรียน 20+ คนไม่ชนกัน), รักษา `main` ให้เป็นเส้นตรงด้วย `git rebase` จาก `upstream/main`, แก้ Conflict และเขียน Commit Message ตามมาตรฐาน
+**เป้าหมาย:** Fork Repo เพื่อแยกพื้นที่ทำงาน (รองรับผู้เรียน 20+ คนไม่ชนกัน), รักษา `main` ให้เป็นเส้นตรงด้วย `git rebase` จาก `origin/main`, แก้ Conflict และเขียน Commit Message ตามมาตรฐาน
 - **โจทย์:**
-  1. กด **Fork** Repository หลักไปยัง GitHub Account ของตัวเอง แล้ว `git clone` ลงเครื่อง พร้อมเพิ่ม `upstream` remote (`git remote add upstream https://github.com/SavEe2429/git-practice.git`)
+  1. กด **Fork** Repository หลักไปยัง GitHub Account ของตัวเอง แล้ว `git clone` ลงเครื่อง (`origin` จะชี้ไปที่ Fork ของตัวเองโดยอัตโนมัติ)
   2. แตก branch `feature/fast-blink` จาก `main` (`git switch -c feature/fast-blink main`) แล้วแก้บรรทัดที่ 15 ใน `workshop/src/main.cpp` (`clamp_interval(500)` → `clamp_interval(200)`)
   3. Commit ด้วยรูปแบบ Conventional Commits เช่น `feat(blink): support fast blink preset`
-  4. ฝึกอัปเดตฐานให้ทัน Repo ต้นทางด้วย `git fetch upstream` แล้วตามด้วย `git rebase upstream/main` (ไม่สร้าง merge commit) และถ้ามี Conflict ให้แก้แล้วรัน `git add <file>` ต่อด้วย `git rebase --continue` จากนั้น Push ขึ้น Fork ด้วย `git push --force-with-lease -u origin feature/fast-blink`
+  4. ฝึกอัปเดตฐานให้ทัน `origin/main` ด้วย `git fetch origin` แล้วตามด้วย `git rebase origin/main` (ไม่สร้าง merge commit) และถ้ามี Conflict ให้แก้แล้วรัน `git add <file>` ต่อด้วย `git rebase --continue` จากนั้น Push ขึ้น Fork ด้วย `git push --force-with-lease -u origin feature/fast-blink`
 - **เกณฑ์ผ่าน:**
   - [ ] มี branch `main` ที่ประวัติเป็นเส้นตรง (Linear History) และมี branch `feature/*` ที่มี commit ใหม่ต่อจาก `main`
   - [ ] ข้อความ commit ขึ้นต้นด้วย `feat:`, `fix:`, `docs:` ฯลฯ ตามมาตรฐาน
@@ -103,7 +103,7 @@ uv run scripts/verify.py --all
 
 ### แบบฝึกหัดเสริม (Break & Fix Lab): จำลอง CI พัง & Merge Conflict
 1. **CI แดง:** ลองแก้ `test_add_numbers_positive` ใน `workshop/test/test_native/test_main.cpp` ให้คาดหวังค่าผิด (เช่น `TEST_ASSERT_EQUAL_INT(99, ...)`) แล้ว Push เข้า PR → ดู CI ขึ้น ❌ สีแดงและบล็อก Merge → อ่าน Log แก้กลับเป็น `5` แล้ว Push จนเขียว ✅
-2. **Merge Conflict:** แก้บรรทัดเดียวกันใน `workshop/src/main.cpp` บน 2 branches → Rebase & Merge อันแรกเข้า `main` → อีกอันจะติด Conflict → ฝึกแก้ด้วย `git fetch upstream` ตามด้วย `git rebase upstream/main` แล้วเลือกโค้ดที่ถูกต้อง, `git add workshop/src/main.cpp`, `git rebase --continue`
+2. **Merge Conflict:** แก้บรรทัดเดียวกันใน `workshop/src/main.cpp` บน 2 branches → Rebase & Merge อันแรกเข้า `main` → อีกอันจะติด Conflict → ฝึกแก้ด้วย `git fetch origin` ตามด้วย `git rebase origin/main` แล้วเลือกโค้ดที่ถูกต้อง, `git add workshop/src/main.cpp`, `git rebase --continue`
 
 ---
 

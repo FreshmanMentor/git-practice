@@ -215,23 +215,30 @@ git log --graph --oneline --decorate -n 6""",
             {
                 "heading": "L-02: การแก้ Rebase Conflict, ออกจาก Vim และ Push ด้วย --force-with-lease",
                 "steps": [
-                    "ตั้งค่า Editor ของ repo ให้เปิดด้วย VS Code (<code>code --wait</code>) เพื่อลดปัญหาติดหน้าจอ Vim",
-                    "<strong>สำคัญมากระหว่าง <code>git rebase</code>:</strong> สัญลักษณ์ <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> คือ<strong>โค้ดฝั่ง <code>origin/main</code> (ฐานใหม่)</strong> ส่วนด้านล่าง <code>=======</code> คือ<strong>โค้ด Commit ของเรา</strong>",
-                    "หลังลบเส้นแบ่ง Conflict และเก็บโค้ดที่ถูกต้องแล้ว ให้ Stage ไฟล์ด้วย <code>git add</code> แล้วรัน <code>git rebase --continue</code>",
-                    "หากเผลอเข้าหน้า Vim ให้พิมพ์ <code>:wq</code> แล้วกด Enter (หรือถอยกลับก่อน Rebase ด้วย <code>git rebase --abort</code>)",
-                    "Push หลัง Rebase ด้วย <code>git push --force-with-lease</code> (<strong>ห้าม</strong>รัน <code>git pull</code> ตามคำแนะนำ error และ<strong>ห้าม</strong> force-push เข้า <code>main</code> เด็ดขาด)",
+                    "ตั้งค่าให้ Git เปิดข้อความ Commit ด้วย VS Code แทน Vim (<code>git config --local core.editor \"code --wait\"</code>) — เมื่อแท็บ VS Code เด้งขึ้นมาให้กด <strong>Save แล้วปิดแท็บ</strong> เพื่อให้ Git ทำงานต่อ",
+                    "<strong>วิธีอ่าน Conflict ใน <code>src/main.cpp</code>:</strong> ช่วงระหว่าง <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> ถึง <code>=======</code> คือ<strong>โค้ดเดิมบน <code>origin/main</code></strong> ส่วนช่วงระหว่าง <code>=======</code> ถึง <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> คือ<strong>โค้ดใหม่จาก Commit ของเรา</strong> (ดูตัวอย่างจริงด้านล่าง)",
+                    "แก้ไฟล์โดย<strong>ลบเส้นแบ่งทั้ง 3 เส้น</strong> (<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>) ออกให้หมด เหลือเฉพาะโค้ดใหม่ที่ต้องการ จากนั้นรัน <code>git add src/main.cpp</code> แล้วต่อด้วย <code>git rebase --continue</code>",
+                    "หากเผลอเข้าหน้าจอดำ Vim ให้พิมพ์ <code>:wq</code> แล้วกด Enter เพื่อบันทึกและออก (หรือถอยกลับก่อน Rebase ด้วย <code>git rebase --abort</code>)",
+                    "Push หลัง Rebase ด้วย <code>git push --force-with-lease -u origin feature/fast-blink</code> (<strong>ห้าม</strong>รัน <code>git pull</code> ตามคำแนะนำ error และ<strong>ห้าม</strong> force-push เข้า <code>main</code> เด็ดขาด)",
                 ],
-                "code": """# --- แนะนำตั้ง Editor เป็น VS Code ก่อนกันติดหน้าจอ Vim ---
+                "code": """# 1. ตั้งค่าให้ Git ใช้ VS Code แทน Vim (เวลาแก้ข้อความ Commit ให้ Save แล้วปิดแท็บ)
 git config --local core.editor "code --wait"
 
-# --- หากเกิด CONFLICT ระหว่าง git rebase origin/main ---
-# 1. เปิดไฟล์ที่มีปัญหา ลบเส้น <<<<<<< HEAD, =======, >>>>>>> แล้วเก็บโค้ดที่ถูกต้อง
-# 2. Stage ไฟล์ที่แก้แล้ว แล้วทำ Rebase ต่อ:
+# 2. ตัวอย่างหน้าตา Conflict จริงใน src/main.cpp:
+<<<<<<< HEAD                                          // <-- เริ่มส่วนโค้ดเดิมบน origin/main
+  blink_interval_ms = blink_math::clamp_interval(500);  // โค้ดเดิม (จาก origin/main)
+=======                                               // <-- เส้นคั่นระหว่างโค้ดเดิมกับโค้ดใหม่
+  blink_interval_ms = blink_math::clamp_interval(200);  // โค้ดใหม่ (จาก Commit ของเรา)
+>>>>>>> feat(blink): support fast blink interval      // <-- จบส่วนโค้ดใหม่
+
+# 3. แก้ให้เหลือเฉพาะโค้ดใหม่ที่ต้องการ (ลบเส้น <<<, ===, >>> ออกให้หมด):
+  blink_interval_ms = blink_math::clamp_interval(200);
+
+# 4. บันทึกไฟล์แล้ว Stage + ทำ Rebase ต่อ (หรือยกเลิกด้วย: git rebase --abort):
 git add src/main.cpp
 git rebase --continue
-# (หากทำพลาดอยากถอยกลับก่อน Rebase ให้ใช้: git rebase --abort)
 
-# 3. หลัง Rebase ประวัติ Commit Hash จะเปลี่ยน ให้ใช้ --force-with-lease:
+# 5. Push หลัง Rebase (Commit Hash เปลี่ยน จึงต้องใช้ --force-with-lease):
 git push --force-with-lease -u origin feature/fast-blink""",
             },
         ],

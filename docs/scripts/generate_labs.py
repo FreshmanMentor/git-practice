@@ -905,8 +905,8 @@ defaults:
                     "ขอ Cloud Linux VM (<code>ubuntu-latest</code>)",
                     "ดึงโค้ดด้วย <code>checkout@v7</code>, ตั้งค่า Python/uv ด้วย <code>setup-uv@v10.3.3</code> และรัน <code>pre-commit/action@v3.0.1</code>",
                 ],
-                "code": """# Job 1: ตรวจรูปแบบโค้ดและ YAML ด้วย Pre-commit
-jobs:
+                "code": """jobs:
+  # Job 1: ตรวจรูปแบบโค้ดและ YAML ด้วย Pre-commit
   lint:
     name: Code Format & Lint Check
     runs-on: ubuntu-latest
@@ -1099,8 +1099,8 @@ defaults:
                     "ติดตั้ง <code>platformio</code> และ <code>esptool</code> ด้วย <code>uv tool install</code>",
                     "รัน <code>pio test -e native</code> ซ้ำอีกครั้งก่อนสั่ง Compile ไฟล์ <code>.bin</code>",
                 ],
-                "code": """# Job สำหรับทดสอบและคอมไพล์เฟิร์มแวร์เมื่อมี Tag เวอร์ชัน
-jobs:
+                "code": """jobs:
+  # Job สำหรับทดสอบและคอมไพล์เฟิร์มแวร์เมื่อมี Tag เวอร์ชัน
   release:
     name: Build & Publish ESP32 Release
     runs-on: ubuntu-latest

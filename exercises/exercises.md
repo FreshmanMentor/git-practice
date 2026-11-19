@@ -62,13 +62,13 @@ uv run scripts/verify.py --all
 **เป้าหมาย:** ป้องกันโค้ดผิดฟอร์แมตและข้อความ Commit ผิดรูปแบบก่อนเข้า Git History
 - **โจทย์:**
   1. ตรวจสอบไฟล์ `.clang-format` ที่มีให้แล้วที่ root และแทนที่เนื้อหาใน `.pre-commit-config.yaml` (ลบ `repos: []` และ `# TODO`) ตามใบงาน **LAB 03** แล้วรัน `git add .pre-commit-config.yaml` ก่อนเสมอ
-  2. ติดตั้ง hook ทั้ง `pre-commit` และ `commit-msg` (`pre-commit install` และ `pre-commit install --hook-type commit-msg`)
+  2. ติดตั้ง hook ทั้ง `pre-commit` และ `commit-msg` (`uv run pre-commit install` และ `uv run pre-commit install --hook-type commit-msg`) — โดยไฟล์ `.pre-commit-config.yaml` ต้องอยู่ที่ Root ของ Repo ส่วนคำสั่งรันจาก `workshop/.venv`
   3. **ทดลอง Break-Fix แบบแยก 2 ขั้น:**
-     - **ขั้น A (Format Hook):** เพิ่มบรรทัดที่จัดช่องว่างผิดจงใจ เช่น `int   precommit_test =  1;` ท้ายฟังก์ชัน `setup()` ใน `workshop/src/main.cpp` แล้ว `git add workshop/src/main.cpp` → `git commit -m "style: test clang-format"` เพื่อดู hook บล็อกและจัดฟอร์แมตให้อัตโนมัติ → รัน `git add workshop/src/main.cpp` อีกรอบ
+     - **ขั้น A (Format Hook):** เพิ่มบรรทัดที่จัดช่องว่างผิดจงใจ เช่น `int   precommit_test =  1;` ท้ายฟังก์ชัน `setup()` ใน `workshop/src/main.cpp` แล้ว `git add src/main.cpp` → `git commit -m "style: test clang-format"` เพื่อดู hook บล็อกและจัดฟอร์แมตให้อัตโนมัติ → รัน `git add src/main.cpp` อีกรอบ
      - **ขั้น B (Commit-Msg Hook):** ลองรัน `git commit -m "bad commit message"` เพื่อดู hook `conventional-pre-commit` ปฏิเสธข้อความที่ไม่ถูกกติกา
   4. แก้ข้อความเป็น `git commit -m "style: format main.cpp with clang-format"` แล้ว Commit ให้ผ่าน (และ Commit `.pre-commit-config.yaml` ด้วย `chore(hooks): configure pre-commit`)
 - **เกณฑ์ผ่าน:**
-  - [ ] รัน `pre-commit run --all-files` ผ่านทุก hook
+  - [ ] รัน `uv run pre-commit run --all-files` ผ่านทุก hook
   - [ ] Commit ข้อความผิดรูปแบบถูกบล็อกจริง และข้อความถูกต้องผ่านได้
   - [ ] `uv run scripts/verify.py --module 3` ขึ้น `[PASS]`
 
@@ -80,10 +80,10 @@ uv run scripts/verify.py --all
   1. แทนที่เนื้อหาใน `workshop/platformio.ini` (ลบ `; TODO`) เพื่อเพิ่ม `[env:native]` พร้อม `test_build_src = no` และ `test_filter = test_native`
   2. แทนที่เนื้อหาใน `workshop/test/test_native/test_main.cpp` (ลบ `test_starter_example` / `main()` เดิม) เพื่อเขียน Test Cases ทดสอบฟังก์ชันทั้งหมดใน `blink_math` อย่างน้อย 4 test cases
   3. ศึกษาไฟล์ `workshop/test/test_esp32/test_hardware.cpp` ที่มีให้ใน Repo สำหรับเทสบนบอร์ดจริง
-  4. รัน `pio test -e native -v` จากใน `workshop/` (บน Windows ต้องมี `gcc`/`g++` จาก MinGW/WinLibs ใน PATH — หากไม่มีและลงไม่ได้ ให้ใช้ `pio run -e esp32doit-devkit-v1` แล้วตรวจผล `native` บน GitHub Actions ใน Module 5)
+  4. รัน `uv run pio test -e native -v` จากใน `workshop/` (บน Windows ต้องมี `gcc`/`g++` จาก MinGW/WinLibs ใน PATH — หากไม่มีและลงไม่ได้ ให้ใช้ `uv run pio run -e esp32doit-devkit-v1` แล้วตรวจผล `native` บน GitHub Actions ใน Module 5)
 - **เกณฑ์ผ่าน:**
-  - [ ] `pio test -e native` แสดงผล `PASSED` ครบทุก test case (หรือขึ้น `[WARN]` ใน `verify.py` หากเครื่องไม่มี `gcc`)
-  - [ ] `pio run -e esp32doit-devkit-v1` คอมไพล์ผ่านปกติ
+  - [ ] `uv run pio test -e native` แสดงผล `PASSED` ครบทุก test case (หรือขึ้น `[WARN]` ใน `verify.py` หากเครื่องไม่มี `gcc`)
+  - [ ] `uv run pio run -e esp32doit-devkit-v1` คอมไพล์ผ่านปกติ
   - [ ] `uv run scripts/verify.py --module 4` ขึ้น `[PASS]` (ไม่มี `[FAIL]`)
 
 ---
@@ -121,9 +121,9 @@ uv run scripts/verify.py --all
      git tag -a v1.0.0 -m "release: v1.0.0"
      git push origin v1.0.0
      ```
-  6. *(ถ้ามีบอร์ดจริง)* ดาวน์โหลด `esp32doit-v1.0.0-merged-firmware.bin` จากหน้า Releases แล้ว Flash ลงบอร์ดด้วย `esptool` (ติดตั้งไว้แล้วใน LAB 00):
+  6. *(ถ้ามีบอร์ดจริง)* ดาวน์โหลด `esp32doit-v1.0.0-merged-firmware.bin` จากหน้า Releases แล้ว Flash ลงบอร์ดด้วย `esptool` (ติดตั้งไว้แบบ Local ใน `workshop/.venv`):
      ```powershell
-     esptool --chip esp32 --port COM3 --baud 460800 write-flash 0x0 esp32doit-v1.0.0-merged-firmware.bin
+     uv run esptool --chip esp32 --port COM3 --baud 460800 write-flash 0x0 esp32doit-v1.0.0-merged-firmware.bin
      ```
      *(หรือเปิดเว็บ [ESP Tool](https://espressif.github.io/esptool-js/) บน Chrome/Edge เสียบสาย USB แล้วเลือกไฟล์ที่ Address `0x0` ได้ทันทีโดยไม่ต้องลงโปรแกรม)*
   7. **Shared-PC Cleanup (สำคัญมากสำหรับเครื่องห้องแล็บ):** Sign Out ออกจาก VS Code (`Accounts -> Sign Out`), ล้าง Git Credential Manager (`cmdkey /list`), Sign Out บน Browser และลบโฟลเดอร์งานที่ Clone ไว้

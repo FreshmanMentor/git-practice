@@ -6,7 +6,7 @@
 1. **ติดตั้ง Git + VS Code:** โหลด Git (`git-scm.com`) และ Visual Studio Code (`code.visualstudio.com`)
 2. **ติดตั้ง PlatformIO ครบทั้ง 2 ส่วน** *(สำคัญมาก — ใช้คนละหน้าที่)*:
    - **PlatformIO IDE (VS Code Extension — ปุ่ม UI ใน VS Code):** เปิด VS Code กด `Ctrl+Shift+X` ค้นหา **`PlatformIO IDE`** → กด **Install** → รอแถบมุมขวาล่างโหลด *"PlatformIO: Installing PlatformIO Core..."* จนเสร็จ แล้วกด Reload/Restart VS Code *(และลง **`GitHub Pull Requests`** ด้วย)*
-   - **PlatformIO Core CLI (`pio` ใน Terminal / CI):** เปิด PowerShell ทำตามใบงาน **[LAB00-Environment_Setup.pdf](exercises/labs/LAB00-Environment_Setup.pdf)** เพื่อลง `uv`, `pio` (`uv tool install platformio`), `pre-commit`, `esptool`, WinLibs `gcc` และ pre-cache แพ็กเกจ ESP32 ล่วงหน้า
+   - **PlatformIO Core CLI (`pio` ใน Terminal / CI):** เปิด PowerShell ทำตามใบงาน **[LAB00-Environment_Setup.pdf](exercises/labs/LAB00-Environment_Setup.pdf)** เพื่อลง `uv`, รัน `uv sync` ใน `workshop/` (ติดตั้ง `platformio`, `pre-commit`, `esptool` แบบ Local ใน `workshop/.venv`), WinLibs `gcc` และ pre-cache แพ็กเกจ ESP32 ล่วงหน้า
 3. **เช็กความพร้อมเครื่อง:** เปิดโฟลเดอร์ `workshop/` เป็น Workspace หลัก (`code workshop`) แล้วรัน `uv run scripts/check_env.py`
 
 ---

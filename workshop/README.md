@@ -11,9 +11,10 @@
 
 ## คำสั่งที่ใช้บ่อย (รันจากโฟลเดอร์ `workshop/`)
 ```powershell
+uv sync
 uv run scripts/check_env.py
-pio run -e esp32doit-devkit-v1
-pio test -e native -v
+uv run pio run -e esp32doit-devkit-v1
+uv run pio test -e native -v
 uv run scripts/verify.py --all
 ```
 

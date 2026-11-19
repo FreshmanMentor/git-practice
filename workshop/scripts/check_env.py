@@ -33,6 +33,16 @@ def check_cmd(cmd: list[str], cwd: Path | None = None) -> tuple[bool, str]:
         return False, str(exc)
 
 
+def find_local_tool(name: str) -> str:
+    for candidate in (
+        PROJECT_DIR / ".venv" / "Scripts" / f"{name}.exe",
+        PROJECT_DIR / ".venv" / "bin" / name,
+    ):
+        if candidate.exists():
+            return str(candidate)
+    return shutil.which(name) or ""
+
+
 def find_pio_fallback() -> str:
     home = Path.home()
     for c in [
@@ -46,7 +56,7 @@ def find_pio_fallback() -> str:
 
 def find_esptool() -> str:
     for name in ("esptool", "esptool.py"):
-        found = shutil.which(name)
+        found = find_local_tool(name)
         if found:
             return found
     return ""
@@ -80,44 +90,44 @@ def main() -> int:
 
     # 2. uv
     ok, ver = check_cmd(["uv", "--version"])
-    print(f"[{'OK' if ok else 'WARN'}] uv: {ver or 'ไม่พบ uv (แนะนำสำหรับจัดการ pre-commit, pio, esptool และรัน verify.py)'}")
+    print(f"[{'OK' if ok else 'MISSING'}] uv: {ver or 'ไม่พบ uv (จำเป็นสำหรับ uv sync และ uv run)'}")
     if not ok:
-        print("   -> แนะนำ: ดูวิธีติดตั้งที่ https://docs.astral.sh/uv/getting-started/installation/")
-        warns += 1
-
-    # 3. pre-commit
-    ok, ver = check_cmd(["pre-commit", "--version"])
-    print(f"[{'OK' if ok else 'MISSING'}] pre-commit: {ver or 'ยังไม่ติดตั้งหรือไม่อยู่ใน PATH'}")
-    if not ok:
-        print("   -> แก้ไข: uv tool install pre-commit; uv tool update-shell  (แล้วปิด-เปิด Terminal ใหม่)")
+        print("   -> แก้ไข: ดูวิธีติดตั้งที่ https://docs.astral.sh/uv/getting-started/installation/")
         fails += 1
 
-    # 4. PlatformIO CLI (ตรวจ PATH จริงก่อน fallback)
-    pio_in_path = shutil.which("pio")
-    if pio_in_path:
-        ok, ver = check_cmd([pio_in_path, "--version"])
-        print(f"[OK] PlatformIO CLI (in PATH): {ver} ({pio_in_path})")
+    # 3. pre-commit (Local .venv)
+    pre_commit_exe = find_local_tool("pre-commit")
+    ok, ver = check_cmd([pre_commit_exe, "--version"]) if pre_commit_exe else (False, "")
+    print(f"[{'OK' if ok else 'MISSING'}] pre-commit (local): {ver or 'ยังไม่พบใน workshop/.venv'}")
+    if not ok:
+        print("   -> แก้ไข (รันใน workshop/): uv sync")
+        fails += 1
+
+    # 4. PlatformIO CLI (Local .venv หรือ fallback)
+    pio_local = find_local_tool("pio")
+    if pio_local:
+        ok, ver = check_cmd([pio_local, "--version"])
+        print(f"[OK] PlatformIO CLI (local): {ver} ({pio_local})")
     else:
         pio_fb = find_pio_fallback()
         if pio_fb:
             ok, ver = check_cmd([pio_fb, "--version"])
-            print(f"[WARN] PlatformIO CLI: พบที่ {pio_fb} ({ver}) แต่คำสั่ง `pio` ยังไม่อยู่ใน PATH")
-            print("   -> แก้ไข: uv tool install platformio; uv tool update-shell  (แล้วปิด-เปิด Terminal ใหม่)")
-            print(f'   -> ชั่วคราว: เรียกใช้ด้วย & "{pio_fb}" ...')
+            print(f"[WARN] PlatformIO CLI: พบที่ {pio_fb} ({ver}) แต่ยังไม่พบใน workshop/.venv")
+            print("   -> แก้ไข (รันใน workshop/): uv sync")
             warns += 1
         else:
             print("[MISSING] PlatformIO CLI (pio)")
-            print("   -> แก้ไข: uv tool install platformio; uv tool update-shell  (หรือติดตั้ง VS Code PlatformIO IDE)")
+            print("   -> แก้ไข (รันใน workshop/): uv sync")
             fails += 1
 
-    # 5. esptool (ใช้ใน Lab 06)
+    # 5. esptool (Local .venv ใช้ใน Lab 06)
     esptool_exe = find_esptool()
     if esptool_exe:
         ok, ver = check_cmd([esptool_exe, "version"])
-        print(f"[OK] esptool: {ver or 'พร้อมใช้งาน'} ({esptool_exe})")
+        print(f"[OK] esptool (local): {ver or 'พร้อมใช้งาน'} ({esptool_exe})")
     else:
-        print("[WARN] esptool: ยังไม่พบคำสั่ง `esptool` ใน PATH (ต้องใช้ใน Lab 06)")
-        print("   -> แก้ไข: uv tool install esptool; uv tool update-shell  (แล้วปิด-เปิด Terminal ใหม่)")
+        print("[WARN] esptool: ยังไม่พบใน workshop/.venv (ต้องใช้ใน Lab 06)")
+        print("   -> แก้ไข (รันใน workshop/): uv sync")
         warns += 1
 
     # 6. gcc / g++ สำหรับ pio test -e native ใน Lab 04

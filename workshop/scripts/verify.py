@@ -51,6 +51,13 @@ def run_cmd(cmd: List[str], cwd: Path) -> Tuple[int, str, str]:
 
 
 def find_pio() -> str:
+    local_venv = Path(__file__).resolve().parent.parent / ".venv"
+    for candidate in (
+        local_venv / "Scripts" / "pio.exe",
+        local_venv / "bin" / "pio",
+    ):
+        if candidate.exists():
+            return str(candidate)
     pio_in_path = shutil.which("pio")
     if pio_in_path:
         return pio_in_path
@@ -261,7 +268,7 @@ class Checker:
         if hook_pre.exists() and hook_msg.exists():
             self.record("PASS", "Git hooks installed", "ติดตั้ง pre-commit และ commit-msg hooks แล้ว")
         else:
-            self.record("FAIL", "Git hooks installed", "รัน pre-commit install; pre-commit install --hook-type commit-msg")
+            self.record("FAIL", "Git hooks installed", "รัน uv run pre-commit install; uv run pre-commit install --hook-type commit-msg")
 
     def check_module_4(self) -> None:
         print("\n=== Module 4: PlatformIO Unit Testing ===")

@@ -129,9 +129,9 @@ def main() -> None:
             if not args or "git" in args:
                 run_and_render(browser, "git log --graph --oneline --decorate (SavEe2429/git-practice)", "git log --graph --oneline --decorate -n 6", ["git", "log", "--graph", "--oneline", "--decorate", "-n", "6"], "term-01-git-log.png", cwd=workshop_dir)
             if not args or "precommit" in args:
-                run_and_render(browser, "pre-commit run --all-files", "pre-commit run --all-files", ["pre-commit", "run", "--all-files"], "term-02-pre-commit.png", cwd=workshop_dir)
+                run_and_render(browser, "uv run pre-commit run --all-files", "uv run pre-commit run --all-files", ["uv", "run", "pre-commit", "run", "--all-files"], "term-02-pre-commit.png", cwd=workshop_dir)
             if not args or "pio" in args:
-                run_and_render(browser, "PlatformIO Build (esp32doit-devkit-v1)", "pio run -e esp32doit-devkit-v1", [pio, "run", "-e", "esp32doit-devkit-v1"], "term-03-pio-build.png", {"TEMP": local_tmp, "TMP": local_tmp}, cwd=workshop_dir)
+                run_and_render(browser, "PlatformIO Build (esp32doit-devkit-v1)", "uv run pio run -e esp32doit-devkit-v1", ["uv", "run", "pio", "run", "-e", "esp32doit-devkit-v1"], "term-03-pio-build.png", {"TEMP": local_tmp, "TMP": local_tmp}, cwd=workshop_dir)
             if not args or "verify" in args:
                 run_and_render(browser, "Workshop Self-Check (scripts/verify.py)", "uv run scripts/verify.py --all", ["uv", "run", "scripts/verify.py", "--all"], "term-04-verify.png", max_lines=45, cwd=workshop_dir)
         finally:

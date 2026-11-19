@@ -406,8 +406,8 @@ description: เสนอฟีเจอร์ใหม่หรือการ�
 title: "[Feat]: "
 labels: ["enhancement"]
 
-# โครงสร้างฟอร์มรับข้อมูลฟีเจอร์ใหม่
 body:
+  # ช่องกรอกปัญหาหรือความต้องการ
   - type: textarea
     id: problem
     attributes:

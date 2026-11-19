@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 Generate editable Microsoft Word (.docx) Lab Sheets (LAB00..LAB06) into exercises/labs/
-matching LAB00..LAB06.pdf, using Sarabun (18pt bold headings, 16pt body),
-1 item per line for all steps/lists, copy-paste ready code boxes, and real screenshots.
+matching LAB00..LAB06.pdf, using Sarabun (16pt bold headings, 14pt body, Sarabun entire doc),
+1 blank line above every heading, 1 blank line above/below every image, and 1 item per line.
 """
 
 import html
@@ -24,9 +24,9 @@ INLINE_TAG_RE = re.compile(r"(<strong>.*?</strong>|<em>.*?</em>)", re.DOTALL)
 CODE_RE = re.compile(r"(<code>.*?</code>)", re.DOTALL)
 
 FONT_THAI = "Sarabun"
-FONT_MONO = "Consolas"
-HEADING_SIZE = 18.0
-BODY_SIZE = 16.0
+FONT_MONO = "Sarabun"
+HEADING_SIZE = 16.0
+BODY_SIZE = 14.0
 
 
 def set_run_font(run, font_name: str, size_pt: float, bold: bool = False, italic: bool = False, color=None) -> None:
@@ -51,7 +51,7 @@ def _emit_code_aware(paragraph, fragment: str, base_size: float, color, bold: bo
             continue
         if sub.startswith("<code>") and sub.endswith("</code>"):
             run = paragraph.add_run(html.unescape(sub[6:-7]))
-            set_run_font(run, FONT_MONO, max(10.0, base_size - 2.5), bold=bold, italic=italic, color=RGBColor(0x00, 0x00, 0x00))
+            set_run_font(run, FONT_MONO, base_size, bold=bold, italic=italic, color=RGBColor(0x00, 0x00, 0x00))
         else:
             run = paragraph.add_run(html.unescape(sub))
             set_run_font(run, FONT_THAI, base_size, bold=bold, italic=italic, color=color)
@@ -108,8 +108,9 @@ def set_row_min_height(row, height_twips: int) -> None:
 
 
 def add_section_heading(doc: Document, text: str) -> None:
+    _ensure_blank_lines(doc, 1)
     p = doc.add_paragraph()
-    p.paragraph_format.space_before = Pt(12)
+    p.paragraph_format.space_before = Pt(0)
     p.paragraph_format.space_after = Pt(4)
     p.paragraph_format.keep_with_next = True
     run = p.add_run(text)
@@ -129,12 +130,14 @@ def _trailing_blank_paragraphs(doc: Document) -> int:
     return count
 
 
-def _ensure_blank_lines(doc: Document, count: int = 2) -> None:
+def _ensure_blank_lines(doc: Document, count: int = 1) -> None:
     missing = max(0, count - _trailing_blank_paragraphs(doc))
     for _ in range(missing):
         sp = doc.add_paragraph()
         sp.paragraph_format.space_before = Pt(0)
-        sp.paragraph_format.space_after = Pt(2)
+        sp.paragraph_format.space_after = Pt(0)
+        r = sp.add_run("")
+        set_run_font(r, FONT_THAI, BODY_SIZE)
 
 
 def add_code_box(doc: Document, code_text: str, dark: bool = False) -> None:
@@ -155,7 +158,7 @@ def add_code_box(doc: Document, code_text: str, dark: bool = False) -> None:
     set_run_font(
         run,
         FONT_MONO,
-        10.5,
+        11.5,
         color=RGBColor(0xE2, 0xE8, 0xF0) if dark else RGBColor(0x0F, 0x17, 0x2A),
     )
     _ensure_blank_lines(doc, 1)
@@ -177,7 +180,7 @@ def add_picture_block(doc: Document, img_path: Path, caption: str, width_inches:
     p_cap.paragraph_format.space_before = Pt(0)
     p_cap.paragraph_format.space_after = Pt(2)
     rc = p_cap.add_run(caption)
-    set_run_font(rc, FONT_THAI, 13.5, italic=True, color=RGBColor(0x33, 0x41, 0x55))
+    set_run_font(rc, FONT_THAI, 12.5, italic=True, color=RGBColor(0x33, 0x41, 0x55))
 
     _ensure_blank_lines(doc, 1)
 
@@ -322,8 +325,9 @@ def build_docx(lab: dict) -> Path:
         code = item.get("code", "")
         imgs = item.get("images", [])
 
+        _ensure_blank_lines(doc, 1)
         p = doc.add_paragraph()
-        p.paragraph_format.space_before = Pt(8)
+        p.paragraph_format.space_before = Pt(0)
         p.paragraph_format.space_after = Pt(3)
         p.paragraph_format.keep_with_next = True
         r = p.add_run(html.unescape(heading))

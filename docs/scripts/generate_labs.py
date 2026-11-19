@@ -1190,23 +1190,23 @@ TEMPLATE = """<!DOCTYPE html>
       @top-right {{
         content: "ESP32 Git, Testing & CI/CD Workshop\\A Dept. Computer Engineering / PlatformIO Lab";
         white-space: pre;
-        font-family: "Sarabun", "Leelawadee UI", "Tahoma", sans-serif;
+        font-family: "Sarabun", sans-serif;
         font-size: 9pt;
         color: #475569;
         text-align: right;
       }}
       @bottom-right {{
         content: "Page " counter(page) " of " counter(pages);
-        font-family: "Sarabun", "Leelawadee UI", "Tahoma", sans-serif;
+        font-family: "Sarabun", sans-serif;
         font-size: 9.5pt;
         color: #334155;
       }}
     }}
     * {{ box-sizing: border-box; }}
     body {{
-      font-family: "Sarabun", "Leelawadee UI", "Tahoma", "Segoe UI", sans-serif;
+      font-family: "Sarabun", sans-serif;
       color: #111827;
-      font-size: 16pt;
+      font-size: 14pt;
       line-height: 1.5;
       margin: 0;
       padding: 0;
@@ -1229,55 +1229,55 @@ TEMPLATE = """<!DOCTYPE html>
     }}
     h1.lab-title {{
       text-align: center;
-      font-size: 18pt;
+      font-size: 16pt;
       font-weight: 700;
       text-decoration: underline;
       margin: 6px 0 14px 0;
       color: #0f172a;
     }}
     h3.sec {{
-      font-size: 18pt;
+      font-size: 16pt;
       font-weight: 700;
-      margin: 16px 0 8px 0;
+      margin: 21pt 0 6pt 0;
       color: #0f172a;
       break-after: avoid;
       page-break-after: avoid;
     }}
     .step-heading {{
-      font-size: 18pt;
+      font-size: 16pt;
       font-weight: 700;
-      margin: 14px 0 6px 0;
+      margin: 21pt 0 6pt 0;
       color: #0f172a;
       break-after: avoid;
       page-break-after: avoid;
     }}
     ol, ul {{
-      margin: 4px 0 10px 0;
-      padding-left: 26px;
+      margin: 4px 0 8px 0;
+      padding-left: 24px;
     }}
     li {{
-      margin-bottom: 5px;
-      font-size: 16pt;
+      margin-bottom: 4px;
+      font-size: 14pt;
     }}
     .step-list {{
-      margin: 4px 0 10px 12px;
-      padding-left: 24px;
+      margin: 4px 0 8px 12px;
+      padding-left: 22px;
       color: #1e293b;
     }}
     .step-list li {{
       margin-bottom: 4px;
-      font-size: 16pt;
+      font-size: 14pt;
     }}
     code {{
-      font-family: "Consolas", "Courier New", monospace;
+      font-family: "Sarabun", sans-serif;
       font-size: 13.5pt;
       background: #f1f5f9;
       padding: 1px 4px;
       border-radius: 3px;
     }}
     .exp-row {{
-      margin: 6px 0 6px 12px;
-      font-size: 16pt;
+      margin: 5px 0 5px 12px;
+      font-size: 14pt;
     }}
     .exp-code {{
       text-decoration: underline;
@@ -1288,10 +1288,10 @@ TEMPLATE = """<!DOCTYPE html>
       background: #f8fad2;
       border: 1px solid #475569;
       padding: 10px 14px;
-      margin: 18px 0 18px 12px;
-      font-family: "Consolas", "Courier New", monospace;
-      font-size: 10.5pt;
-      line-height: 1.4;
+      margin: 14pt 0 14pt 12px;
+      font-family: "Sarabun", sans-serif;
+      font-size: 11.5pt;
+      line-height: 1.45;
       white-space: pre-wrap;
       word-break: break-word;
       overflow-wrap: anywhere;
@@ -1303,10 +1303,10 @@ TEMPLATE = """<!DOCTYPE html>
       border: 1px solid #334155;
       border-radius: 4px;
       padding: 10px 14px;
-      margin: 18px 0 18px 12px;
-      font-family: "Consolas", "Courier New", monospace;
-      font-size: 10pt;
-      line-height: 1.4;
+      margin: 14pt 0 14pt 12px;
+      font-family: "Sarabun", sans-serif;
+      font-size: 11pt;
+      line-height: 1.45;
       white-space: pre-wrap;
       word-break: break-word;
       overflow-wrap: anywhere;
@@ -1315,19 +1315,19 @@ TEMPLATE = """<!DOCTYPE html>
     }}
     .fill-line {{
       border-bottom: 1px solid #334155;
-      height: 24px;
-      margin: 4px 0 10px 12px;
+      height: 22px;
+      margin: 4px 0 8px 12px;
     }}
     .q-block {{
       margin: 8px 0 10px 12px;
-      font-size: 16pt;
+      font-size: 14pt;
       break-inside: avoid;
     }}
     .shot-grid {{
       display: grid;
       grid-template-columns: {shot_cols};
-      gap: 24px;
-      margin: 18px 0 18px 12px;
+      gap: 21pt;
+      margin: 21pt 0 21pt 12px;
     }}
     .shot-card {{
       border: 1px solid #cbd5e1;
@@ -1343,7 +1343,7 @@ TEMPLATE = """<!DOCTYPE html>
       border: 1px solid #e2e8f0;
     }}
     .shot-cap {{
-      font-size: 13.5pt;
+      font-size: 12.5pt;
       color: #334155;
       margin-top: 6px;
     }}
@@ -1428,7 +1428,7 @@ def build_lab(lab: dict) -> None:
         if code:
             blk += f'<div class="code-box">{html.escape(code)}</div>'
         for src, cap in imgs:
-            blk += f'<div class="shot-card" style="margin:18px 0 18px 12px;"><img src="{src}" alt="{html.escape(cap)}"/><div class="shot-cap">{html.escape(cap)}</div></div>'
+            blk += f'<div class="shot-card" style="margin:21pt 0 21pt 12px;"><img src="{src}" alt="{html.escape(cap)}"/><div class="shot-cap">{html.escape(cap)}</div></div>'
         detail_blocks.append(blk)
     details_html = "".join(detail_blocks)
     expected_output_html = html.escape(lab["expected_output"])

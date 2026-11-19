@@ -2,6 +2,7 @@ name: Bug Report (แจ้งบั๊ก Firmware)
 description: รายงานปัญหาที่พบในโปรเจกต์ ESP32 DOIT DevKit v1
 title: "[Bug]: "
 labels: ["bug", "triage"]
+
 body:
   - type: markdown
     attributes:
@@ -29,17 +30,17 @@ body:
       required: true
 
   - type: textarea
-      id: description
-      attributes:
-        label: อาการที่พบ & ขั้นตอนการทำซ้ำ (Steps to Reproduce)
-        placeholder: |
-          1. รันคำสั่ง...
-          2. ผลลัพธ์ที่เกิดขึ้น...
-          3. ผลลัพธ์ที่คาดหวัง...
-      validations:
-        required: true
+    id: description
+    attributes:
+      label: อาการที่พบ & ขั้นตอนการทำซ้ำ (Steps to Reproduce)
+      placeholder: |
+        1. รันคำสั่ง...
+        2. ผลลัพธ์ที่เกิดขึ้น...
+        3. ผลลัพธ์ที่คาดหวัง...
+    validations:
+      required: true
 
-    - type: checkboxes
-      id: checklist
-      attributes:
-        label: ยืนยันเบื้องต้น
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: ยืนยันเบื้องต้น

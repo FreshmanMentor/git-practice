@@ -62,19 +62,25 @@ git --version
 #    - PlatformIO IDE (platformio.platformio-ide)""",
             },
             {
-                "heading": "L-02: ติดตั้ง uv และตั้งค่า PATH สำหรับ MSYS2 gcc/g++",
+                "heading": "L-02: ติดตั้ง uv และติดตั้ง/ตั้งค่า PATH สำหรับ MSYS2 gcc/g++",
                 "steps": [
-                    "ติดตั้ง <code>uv</code> ด้วย PowerShell จากนั้น <strong>ปิด Terminal เดิมแล้วเปิด PowerShell หน้าต่างใหม่</strong> เพื่อรีเฟรช <code>PATH</code>",
-                    "ตรวจสอบว่าคำสั่ง <code>uv --version</code> ทำงานได้แล้ว (ส่วน <code>pre-commit</code>, <code>platformio</code>, <code>esptool</code> จะลงแบบ Local ในขั้นตอน <code>uv sync</code> ของ L-03)",
-                    "เพิ่มพาทของ MSYS2 (<code>C:\\msys64\\ucrt64\\bin</code>) เข้า <code>$env:Path</code> ใน PowerShell เพื่อให้เรียกใช้ <code>gcc</code> และ <code>g++</code> สำหรับรัน Unit Test ใน Lab 04 ได้โดยไม่ติดสิทธิ์แก้ System Environment ของเครื่องห้องแล็บ",
+                    "ติดตั้ง <code>uv</code> ด้วย PowerShell จากนั้น <strong>ปิด Terminal เดิมแล้วเปิด PowerShell หน้าต่างใหม่</strong> เพื่อรีเฟรช <code>PATH</code> แล้วตรวจด้วย <code>uv --version</code>",
+                    "เปิดเว็บ <code>https://www.msys2.org/</code> กดปุ่ม <code>[1] msys2-x86_64-*.exe</code> เพื่อดาวน์โหลดและติดตั้ง MSYS2 ลงที่ <code>C:\\msys64</code> (หากเครื่องติดตั้งไว้แล้วให้เปิดโปรแกรม <strong>MSYS2 UCRT64</strong> จาก Start Menu)",
+                    "ในหน้าต่างเทอร์มินัล <strong>MSYS2 UCRT64</strong> ให้รันคำสั่ง <code>[2] pacman -S mingw-w64-ucrt-x86_64-gcc</code> แล้วกด Enter เพื่อติดตั้ง <code>gcc/g++</code>",
+                    "กลับมาที่ PowerShell ใน VS Code แล้วเพิ่มพาท <code>$env:Path = \"C:\\msys64\\ucrt64\\bin;$env:Path\"</code> เพื่อให้เรียกใช้ <code>gcc</code> และ <code>g++</code> ได้ทันทีโดยไม่ติดสิทธิ์แก้ System Environment ของเครื่องห้องแล็บ",
                 ],
-                "code": """# 1. Windows (PowerShell): ติดตั้ง uv
+                "images": [
+                    ("../images/anno-00-msys2-download.png", "หน้าเว็บ https://www.msys2.org/ ขั้นตอนที่ 1: [1] กดดาวน์โหลดตัวติดตั้ง msys2-x86_64-*.exe แล้วติดตั้งลงที่ C:\\msys64"),
+                    ("../images/anno-00-msys2-gcc.png", "ในหน้าต่างเทอร์มินัล MSYS2 UCRT64 ขั้นตอนที่ 6: [2] รัน pacman -S mingw-w64-ucrt-x86_64-gcc เพื่อติดตั้งคอมไพเลอร์ C/C++"),
+                ],
+                "code": """# 1. Windows (PowerShell): ติดตั้ง uv แล้วปิด-เปิด PowerShell ใหม่เพื่อเช็กเวอร์ชัน
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-
-# 2. ปิดแล้วเปิด PowerShell หน้าต่างใหม่ จากนั้นเช็กเวอร์ชัน uv:
 uv --version
 
-# 3. เพิ่ม PATH ของ MSYS2 (C:\\msys64\\ucrt64\\bin) ใน PowerShell แล้วเช็ก g++ / gcc:
+# 2. [รันในหน้าต่างโปรแกรม MSYS2 UCRT64 หลังติดตั้ง MSYS2 เสร็จ]:
+# pacman -S mingw-w64-ucrt-x86_64-gcc
+
+# 3. [รันใน PowerShell ของ VS Code] เพิ่ม PATH ของ MSYS2 แล้วเช็ก g++ / gcc:
 $env:Path = "C:\\msys64\\ucrt64\\bin;$env:Path"
 g++ --version
 gcc --version""",

@@ -84,6 +84,22 @@ def main() -> None:
         ],
     )
 
+    # 0b. LAB 00: MSYS2 Installer Download & Pacman GCC
+    annotate(
+        "msys2-download.png",
+        "anno-00-msys2-download.png",
+        [
+            {"num": 1, "box": (38, 582, 262, 624), "label": "ดาวน์โหลดตัวติดตั้ง msys2-x86_64-*.exe", "pos": "top"},
+        ],
+    )
+    annotate(
+        "msys2-pacman-gcc.png",
+        "anno-00-msys2-gcc.png",
+        [
+            {"num": 2, "box": (38, 405, 760, 448), "label": "รัน pacman -S mingw-w64-ucrt-x86_64-gcc ในหน้าต่าง MSYS2 UCRT64", "pos": "top"},
+        ],
+    )
+
     # 1. LAB 01: Fork & Clone
     annotate(
         "gh-01-repo-fork.png",

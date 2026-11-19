@@ -22,92 +22,86 @@ LABS = [
         "slug": "LAB00-Environment_Setup",
         "title": "Lab 00: Environment Setup &amp; Toolchain Preparation (เตรียมเครื่องครบทุก Lab)",
         "objectives": [
-            "ติดตั้งเครื่องมือทั้งหมดที่ใช้ตั้งแต่ Lab 01 ถึง Lab 06 ไว้ล่วงหน้าในจุดเดียว (Git, VS Code, <code>uv</code>, WinLibs <code>gcc</code> และ Local Toolchain ผ่าน <code>uv sync</code>)",
-            "Fork โปรเจกต์, ตั้งค่า Git <code>--local</code>, เปิดโฟลเดอร์ <code>workshop</code> เป็น Workspace หลัก, ตรวจความพร้อมด้วย <code>scripts/check_env.py</code> และ Pre-cache แพ็กเกจ ESP32 ก่อนเริ่ม Lab 01",
+            "ติดตั้งและตั้งค่าเครื่องมือที่ใช้ตั้งแต่ Lab 01 ถึง Lab 06 ไว้ล่วงหน้าในจุดเดียว (Git, VS Code, <code>uv</code>, MSYS2 <code>gcc/g++</code> และ Local Toolchain ผ่าน <code>uv sync</code>)",
+            "Fork โปรเจกต์, Clone ไว้ที่ Desktop, ตั้งค่า Git <code>--local</code> (รวม <code>git lg</code>), เปิด <code>workshop</code> เป็น Workspace หลัก และตรวจความพร้อมด้วย <code>scripts/check_env.py</code>",
         ],
         "outcomes": [
-            "สามารถเรียกใช้งานคำสั่ง <code>git</code>, <code>uv</code>, <code>uv run pre-commit</code>, <code>uv run pio</code>, <code>uv run esptool</code> และ <code>gcc</code> จาก Terminal ใน <code>workshop</code> ได้จริง",
+            "สามารถเรียกใช้งานคำสั่ง <code>git</code>, <code>git lg</code>, <code>uv</code>, <code>uv run pre-commit</code>, <code>uv run pio</code>, <code>uv run esptool</code> และ <code>g++</code> จาก Terminal ใน <code>workshop</code> ได้จริง",
             "รัน <code>uv run scripts/check_env.py</code> ผ่านและ Build โปรเจกต์ใน <code>workshop</code> ล่วงหน้าได้สำเร็จ",
         ],
         "tools": [
             "ระบบปฏิบัติการ Windows 10/11 (PowerShell), macOS หรือ Linux พร้อมอินเทอร์เน็ต",
-            "โปรแกรม Visual Studio Code (VS Code) และบัญชี GitHub ส่วนตัว",
+            "โปรแกรม Git, Visual Studio Code (VS Code), MSYS2 (<code>C:\\msys64\\ucrt64\\bin</code>) และบัญชี GitHub ส่วนตัว",
             "<code>PATH</code> = รายชื่อโฟลเดอร์ที่ Terminal ใช้ค้นหาคำสั่ง",
             "<code>uv</code> = ตัวจัดการ Python แบบ Local ต่อโปรเจกต์ (ติดตั้งแพ็กเกจไว้ใน <code>workshop/.venv</code> ไม่ปนกับเครื่องภายนอก)",
             "<code>origin</code> = Repo Fork ของคุณเองบน GitHub (ใช้เป็น Remote หลักตลอดเวิร์กชอป)",
             "สคริปต์ตรวจความพร้อม (รันจากโฟลเดอร์ <code>workshop</code>): <code>uv run scripts/check_env.py</code>",
         ],
         "experiments": [
-            ("L-01", "ติดตั้ง Git, VS Code และ Extensions (<strong>PlatformIO IDE</strong> และ <strong>GitHub Pull Requests</strong>)"),
-            ("L-02", "ติดตั้ง <code>uv</code> และ WinLibs <code>gcc/g++</code>"),
-            ("L-03", "Fork โปรเจกต์, เปิดใช้งาน Actions, Clone ลงพาทสั้นๆ, ตั้งค่า <code>--local</code> และรัน <code>uv sync</code>"),
+            ("L-01", "ตรวจสอบ Git, VS Code และติดตั้ง Extension <strong>PlatformIO IDE</strong>"),
+            ("L-02", "ติดตั้ง <code>uv</code> และตั้งค่า <code>PATH</code> ของ MSYS2 <code>gcc/g++</code>"),
+            ("L-03", "Fork โปรเจกต์, เปิดใช้งาน Actions, Clone ไว้ที่ Desktop, ตั้งค่า <code>--local</code> (รวม <code>git lg</code>) และรัน <code>uv sync</code>"),
             ("L-04", "รัน <code>check_env.py</code> เพื่อตรวจสอบการติดตั้งก่อน แล้วจึง Pre-cache แพ็กเกจ ESP32"),
         ],
         "details": [
             {
-                "heading": "L-01: ติดตั้ง Git, VS Code และ Extensions (PlatformIO IDE + GitHub Pull Requests)",
+                "heading": "L-01: ตรวจสอบ Git, VS Code และติดตั้ง Extension (PlatformIO IDE)",
                 "steps": [
                     "Workshop นี้ใช้ PlatformIO 2 ส่วนคู่กัน คือ <strong>PlatformIO IDE Extension</strong> (ปุ่ม UI ใน VS Code) และ <strong>PlatformIO CLI (<code>pio</code>)</strong> (คำสั่ง Terminal และ CI)",
-                    "ติดตั้ง Git และ Visual Studio Code ในเครื่อง (หากยังไม่มี)",
+                    "ตรวจสอบว่าในเครื่องมี Git และ Visual Studio Code พร้อมใช้งาน (หากยังไม่มี ดาวน์โหลดได้จาก <code>https://git-scm.com/</code> และ <code>https://code.visualstudio.com/</code>)",
                     "เปิด VS Code แล้วกด <code>Ctrl+Shift+X</code> เพื่อเปิดหน้า Extensions",
-                    "ค้นหา <strong>PlatformIO IDE</strong> แล้วกด <strong>Install</strong> (รอแถบ <em>Installing PlatformIO Core...</em> มุมขวาล่างจนเสร็จ)",
-                    "ค้นหา <strong>GitHub Pull Requests</strong> แล้วกด <strong>Install</strong> จากนั้น Restart VS Code 1 ครั้ง",
+                    "ค้นหา <strong>PlatformIO IDE</strong> แล้วกด <strong>Install</strong> (รอแถบ <em>Installing PlatformIO Core...</em> มุมขวาล่างจนเสร็จแล้ว Restart VS Code 1 ครั้ง)",
                 ],
                 "images": [
                     ("../images/anno-00-vscode-platformio.png", "หน้าติดตั้ง Extension PlatformIO IDE: [1] กดปุ่ม Install แล้วรอตัวโหลดมุมขวาล่างจนเสร็จ"),
-                    ("../images/anno-02-vscode-pr.png", "หน้าติดตั้ง Extension GitHub Pull Requests: [1] กดปุ่ม Install เพื่อใช้เปิด PR จากใน VS Code"),
                 ],
-                "code": """# 1. Windows: ติดตั้ง Git (หากยังไม่มีในเครื่อง)
-winget install Git.Git
+                "code": """# 1. ตรวจสอบเวอร์ชัน Git ใน PowerShell (หากยังไม่มีให้ติดตั้งจาก https://git-scm.com/download/win)
 git --version
 
-# 2. ใน VS Code กด Ctrl+Shift+X ค้นหาและติดตั้ง Extension 2 ตัวนี้:
-#    - platformio.platformio-ide
-#    - github.vscode-pull-request-github
-# 3. เฉพาะเครื่องส่วนตัวเท่านั้น (ถ้าใช้เครื่องมหาลัย ให้ข้ามไปใช้ --local หลัง Clone ใน L-03):
-# git config --global user.name "Your Name"
-# git config --global user.email "you@example.com" """,
+# 2. ใน VS Code กด Ctrl+Shift+X ค้นหาและกด Install Extension:
+#    - PlatformIO IDE (platformio.platformio-ide)""",
             },
             {
-                "heading": "L-02: ติดตั้ง uv และ WinLibs gcc (สำหรับใช้สร้าง Environment แบบ Local)",
+                "heading": "L-02: ติดตั้ง uv และตั้งค่า PATH สำหรับ MSYS2 gcc/g++",
                 "steps": [
                     "ติดตั้ง <code>uv</code> ด้วย PowerShell จากนั้น <strong>ปิด Terminal เดิมแล้วเปิด PowerShell หน้าต่างใหม่</strong> เพื่อรีเฟรช <code>PATH</code>",
-                    "ตรวจสอบว่าคำสั่ง <code>uv --version</code> ทำงานได้แล้ว (ส่วน <code>pre-commit</code>, <code>platformio</code>, <code>esptool</code> จะลงแบบ Local ในขั้นตอน <code>uv sync</code> ของ L-03 ไม่ต้องลงแบบ Global)",
-                    "ติดตั้ง WinLibs <code>gcc/g++</code> สำหรับรัน <code>uv run pio test -e native</code> ใน Lab 04 (อาจขอสิทธิ์ Admin; หากเครื่องมหาลัยล็อกสิทธิ์ ให้ข้ามไปดูผลบน Cloud CI ใน Lab 05 แทนได้)",
+                    "ตรวจสอบว่าคำสั่ง <code>uv --version</code> ทำงานได้แล้ว (ส่วน <code>pre-commit</code>, <code>platformio</code>, <code>esptool</code> จะลงแบบ Local ในขั้นตอน <code>uv sync</code> ของ L-03)",
+                    "เพิ่มพาทของ MSYS2 (<code>C:\\msys64\\ucrt64\\bin</code>) เข้า <code>$env:Path</code> ใน PowerShell เพื่อให้เรียกใช้ <code>gcc</code> และ <code>g++</code> สำหรับรัน Unit Test ใน Lab 04 ได้โดยไม่ติดสิทธิ์แก้ System Environment ของเครื่องห้องแล็บ",
                 ],
-                "code": """# 1. Windows (PowerShell): ติดตั้ง uv (macOS/Linux: curl -LsSf https://astral.sh/uv/install.sh | sh)
+                "code": """# 1. Windows (PowerShell): ติดตั้ง uv
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 
 # 2. ปิดแล้วเปิด PowerShell หน้าต่างใหม่ จากนั้นเช็กเวอร์ชัน uv:
 uv --version
 
-# 3. Windows: ติดตั้ง MinGW/WinLibs gcc/g++ สำหรับ [env:native] ใน Lab 04
-winget install BrechtSanders.WinLibs.POSIX.UCRT
-# (เปิด Terminal ใหม่แล้วตรวจด้วย: g++ --version)""",
+# 3. เพิ่ม PATH ของ MSYS2 (C:\\msys64\\ucrt64\\bin) ใน PowerShell แล้วเช็ก g++ / gcc:
+$env:Path = "C:\\msys64\\ucrt64\\bin;$env:Path"
+g++ --version
+gcc --version""",
             },
             {
-                "heading": "L-03: Fork โปรเจกต์, เปิดใช้งาน Actions, Clone, ตั้งค่า --local และรัน uv sync",
+                "heading": "L-03: Fork โปรเจกต์, เปิดใช้งาน Actions, Clone ไว้ที่ Desktop, ตั้งค่า --local และรัน uv sync",
                 "steps": [
                     "เปิดหน้า <code>https://github.com/SavEe2429/git-practice</code> บน GitHub",
                     "กดปุ่ม <code>[1] Fork</code> เพื่อคัดลอก Repo ไปยังบัญชี GitHub ของตัวเอง",
                     "บนหน้า Fork ของตัวเอง ให้กดแท็บ <strong>Actions</strong> แล้วกดปุ่มสีเขียว <strong>I understand my workflows, go ahead and enable them</strong>",
                     "กลับมาที่แท็บ <strong>Code</strong> กด <code>[2] &lt;&gt; Code</code> เพื่อ Copy URL ของ Fork ตัวเอง",
-                    "Clone ลงในโฟลเดอร์พาทสั้นๆ (เช่น <code>C:\\ws</code>) แล้วเข้า <code>cd git-practice</code>",
-                    "ตั้งค่า <code>user.name</code> / <code>user.email</code> แบบ <code>--local</code> และเข้า <code>cd workshop</code> เปิดเป็น Workspace หลัก",
+                    "เข้าไปที่โฟลเดอร์ <code>Desktop</code> (<code>cd $HOME\\Desktop</code>) แล้ว <code>git clone</code> ลงที่ Desktop และเข้า <code>cd git-practice</code>",
+                    "ตั้งค่า <code>user.name</code>, <code>user.email</code> และคำสั่งย่อ <code>git lg</code> แบบ <code>--local</code> จากนั้นเข้า <code>cd workshop</code> เปิดเป็น Workspace หลัก",
                     "รัน <code>uv sync</code> เพื่อติดตั้ง <code>pre-commit</code>, <code>platformio</code> และ <code>esptool</code> แบบ Local ลงใน <code>workshop/.venv</code>",
                 ],
                 "images": [
                     ("../images/anno-01-repo-fork.png", "หน้าเว็บ GitHub: [1] กดปุ่ม Fork -> [2] กด <> Code เพื่อ Copy URL ของ Fork ตัวเอง"),
                 ],
-                "code": """# 1. สร้างโฟลเดอร์สั้นๆ เพื่อเลี่ยงปัญหา Windows path ยาว แล้ว Clone จาก Fork ของตัวเอง:
-mkdir C:\\ws -Force
-cd C:\\ws
+                "code": """# 1. เข้าโฟลเดอร์ Desktop แล้ว Clone โปรเจกต์จาก Fork ของตัวเอง:
+cd $HOME\\Desktop
 git clone https://github.com/<your-username>/git-practice.git
 cd git-practice
 
-# 2. ตั้งชื่อผู้เขียนแบบ --local (ปลอดภัยบนเครื่องรวม):
+# 2. ตั้งชื่อผู้เขียนและสร้าง git alias (git lg) แบบ --local:
 git config --local user.name "Your Name"
 git config --local user.email "you@example.com"
+git config --local alias.lg "log --oneline --all --graph --decorate"
 
 # 3. เปิดโฟลเดอร์ workshop เป็น Workspace หลัก และติดตั้งแพ็กเกจแบบ Local (workshop/.venv):
 code workshop
@@ -118,18 +112,14 @@ uv sync""",
                 "heading": "L-04: ตรวจสอบการติดตั้งด้วย check_env.py ก่อน แล้ว Pre-cache แพ็กเกจ ESP32",
                 "steps": [
                     "<strong>รัน <code>uv run scripts/check_env.py</code> จากในโฟลเดอร์ <code>workshop</code> ก่อนเสมอ</strong> เพื่อตรวจสอบว่าเครื่องมือและ Git identity พร้อมครบทุกตัว",
-                    "<em>หมายเหตุสำหรับเครื่องห้องแล็บ:</em> หากในเครื่องมีโฟลเดอร์ <code>git-practice\\workshop</code> อยู่แล้ว สามารถรัน <code>uv run scripts/check_env.py</code> ตั้งแต่อันดับแรกเพื่อเช็กว่าขาดตัวไหนบ้าง",
-                    "หาก <code>check_env.py</code> แจ้งเตือนเรื่อง <code>Windows TEMP</code> ให้สร้างโฟลเดอร์ <code>C:\\Temp</code> และตั้งค่า <code>$env:TEMP</code> / <code>$env:TMP</code> ก่อนรัน PlatformIO",
+                    "<em>หมายเหตุสำหรับเครื่องห้องแล็บ:</em> หากเปิด Terminal ใหม่แล้วไม่พบ <code>g++</code> ให้รัน <code>$env:Path = \"C:\\msys64\\ucrt64\\bin;$env:Path\"</code> ก่อน",
                     "รัน <code>uv run pio run -e esp32doit-devkit-v1</code> เพื่อ Pre-cache Toolchain และแพ็กเกจ ESP32 ล่วงหน้า (รอบแรกใช้เวลา ~20–60 วินาที)",
                 ],
                 "code": """# 1. ตรวจสอบความพร้อมทั้งหมดก่อนเริ่ม Build (รันใน Terminal ของ workspace workshop):
+$env:Path = "C:\\msys64\\ucrt64\\bin;$env:Path"
 uv run scripts/check_env.py
 
-# 2. [หาก check_env.py เตือนเรื่อง C:\\WINDOWS\\TEMP] แก้ TEMP ชั่วคราวใน PowerShell:
-New-Item -ItemType Directory -Force C:\\Temp | Out-Null
-$env:TEMP="C:\\Temp"; $env:TMP="C:\\Temp"
-
-# 3. Pre-cache แพ็กเกจ ESP32 (ใช้ pio แบบ Local ใน workshop/.venv):
+# 2. Pre-cache แพ็กเกจ ESP32 (ใช้ pio แบบ Local ใน workshop/.venv):
 uv run pio run -e esp32doit-devkit-v1""",
             },
         ],
@@ -139,15 +129,14 @@ uv run pio run -e esp32doit-devkit-v1""",
 [OK] Git: git version 2.56.0.windows.4
 [OK] Git identity: Your Name <you@example.com>
 [OK] uv: uv 0.11.31
-[OK] pre-commit (local): pre-commit 4.7.0 (C:\\ws\\git-practice\\workshop\\.venv\\Scripts\\pre-commit.EXE)
-[OK] PlatformIO CLI (local): PlatformIO Core, version 6.2.0 (C:\\ws\\git-practice\\workshop\\.venv\\Scripts\\pio.EXE)
-[OK] esptool (local): esptool v5.x (C:\\ws\\git-practice\\workshop\\.venv\\Scripts\\esptool.EXE)
-[WARN] ไม่พบ gcc/g++ ใน PATH ... (หากเครื่องไม่ได้ลง WinLibs ให้ดูผลบน CI ใน Lab 05 แทน)
-[OK] Windows TEMP: C:\\Temp
+[OK] pre-commit (local): pre-commit 4.7.0 (C:\\Users\\LabRoom\\Desktop\\git-practice\\workshop\\.venv\\Scripts\\pre-commit.EXE)
+[OK] PlatformIO CLI (local): PlatformIO Core, version 6.2.0 (C:\\Users\\LabRoom\\Desktop\\git-practice\\workshop\\.venv\\Scripts\\pio.EXE)
+[OK] esptool (local): esptool v5.x (C:\\Users\\LabRoom\\Desktop\\git-practice\\workshop\\.venv\\Scripts\\esptool.EXE)
+[OK] C/C++ Compiler (สำหรับ pio test -e native): g++.exe (Rev4, Built by MSYS2 project) 16.2.0
 ======================================================
-พร้อมบางส่วน (พบ 1 คำเตือน [WARN] — อ่านรายละเอียดด้านบนก่อนเริ่ม Lab 04 / Lab 06)""",
+พร้อมเริ่มเรียน Workshop! (ผ่านครบทุกการตรวจสอบ)""",
         "results": [
-            "L-03: ผลลัพธ์ของ <code>git --version</code>, <code>uv --version</code>, <code>uv run pre-commit --version</code>, <code>uv run pio --version</code> และ <code>uv run esptool version</code>",
+            "L-03: ผลลัพธ์ของ <code>git --version</code>, <code>uv --version</code>, <code>uv run pre-commit --version</code>, <code>uv run pio --version</code> และ <code>g++ --version</code>",
             "L-04: ผลลัพธ์จริงจาก <code>uv run scripts/check_env.py</code> และ <code>uv run pio run -e esp32doit-devkit-v1</code>",
         ],
         "questions": [
@@ -157,11 +146,12 @@ uv run pio run -e esp32doit-devkit-v1""",
         "exercise": {
             "code": "L-05",
             "steps": [
-                "เข้าไปที่โฟลเดอร์ Workspace หลัก (<code>C:\\ws\\git-practice\\workshop</code>)",
+                "เข้าไปที่โฟลเดอร์ Workspace หลัก (<code>$HOME\\Desktop\\git-practice\\workshop</code>)",
                 "รัน <code>uv run scripts/check_env.py</code> เพื่อยืนยันว่าไม่มีรายการ <code>[MISSING]</code>",
                 "รัน <code>uv run pio run -e esp32doit-devkit-v1</code> ยืนยันว่า Build ผ่าน <code>[SUCCESS]</code> พร้อมเข้าเรียน Lab 01",
             ],
-            "snippet": """cd C:\\ws\\git-practice\\workshop
+            "snippet": """cd $HOME\\Desktop\\git-practice\\workshop
+$env:Path = "C:\\msys64\\ucrt64\\bin;$env:Path"
 uv run scripts/check_env.py
 uv run pio run -e esp32doit-devkit-v1""",
         },
@@ -173,81 +163,97 @@ uv run pio run -e esp32doit-devkit-v1""",
         "slug": "LAB01-Linear_Git_Rebase",
         "title": "Lab 01: Linear Git (Rebase), Fork Workflow &amp; Conventional Commits",
         "objectives": [
-            "เข้าใจการทำงานบน Fork (<code>origin</code>) ร่วมกับ Feature Branch เพื่อให้ประวัติเป็นเส้นตรงและไม่ชนกับผู้อื่น",
-            "เรียนรู้การรักษาประวัติ Commit บน <code>main</code> ให้เป็นเส้นตรงด้วย <code>git rebase origin/main</code>, การแก้ Conflict และการ Push ด้วย <code>--force-with-lease</code>",
+            "เข้าใจการทำงานบน Fork (<code>origin</code>) ร่วมกับ Feature Branch และการใช้คำสั่งย่อ <code>git lg</code> เพื่อดูกราฟ Commit",
+            "เรียนรู้การรักษาประวัติ Commit ให้เป็นเส้นตรงด้วย <code>git rebase main</code>, การจำลองและแก้ Conflict จริง และการ Push ด้วย <code>--force-with-lease</code>",
         ],
         "outcomes": [
             "แตก Branch <code>feature/*</code> จาก <code>main</code>, เขียน Commit แบบ Conventional Commits, แก้ Rebase Conflict และ Push ด้วย <code>--force-with-lease</code> ได้",
-            "ตรวจสอบประวัติด้วย <code>git log --graph --oneline --decorate</code> แล้วเห็นโครงสร้างเส้นตรง (Linear History)",
+            "ตรวจสอบประวัติด้วย <code>git lg</code> แล้วเห็นโครงสร้างเส้นตรง (Linear History)",
         ],
         "tools": [
             "เครื่องมือทั้งหมดติดตั้งและผ่านการตรวจจาก <strong>Lab 00</strong> เรียบร้อยแล้ว",
-            "Repository ต้นแบบของอาจารย์: <code>https://github.com/SavEe2429/git-practice</code> (Fork มาเป็น <code>origin</code> ของตัวเองแล้ว)",
+            "คำสั่งย่อดูกราฟ Git: <code>git lg</code> (ย่อมาจาก <code>git log --oneline --all --graph --decorate</code>)",
             "วิดีโอประกอบ: <code>videos/01-gitflow-branching.mp4</code>",
         ],
         "experiments": [
-            ("L-01", "แตก <code>feature/fast-blink</code> ด้วย <code>git switch -c</code>, แก้ <code>workshop/src/main.cpp</code>, Commit และ Rebase บน <code>origin/main</code>"),
-            ("L-02", "วิธีแก้ Rebase Conflict, ออกจากหน้าจอ Vim และการ Push หลัง Rebase ด้วย <code>--force-with-lease</code>"),
+            ("L-01", "ตั้งค่า <code>git lg</code>, แตก <code>feature/fast-blink</code>, แก้ <code>src/main.cpp</code> (<code>200</code>), Commit และ Push ขึ้น <code>origin</code>"),
+            ("L-02", "สลับกลับไปเพิ่ม Commit ใหม่บน <code>main</code> (<code>300</code>) เพื่อให้กราฟแยกเป็น 2 เส้น แล้วสั่ง <code>git rebase main</code> จนเกิด Conflict"),
+            ("L-03", "อ่านและแก้ Rebase Conflict ใน <code>src/main.cpp</code>, รัน <code>git rebase --continue</code> และ Push ด้วย <code>--force-with-lease</code>"),
         ],
         "details": [
             {
-                "heading": "L-01: แตก Feature Branch, แก้ workshop/src/main.cpp, Commit &amp; Rebase",
+                "heading": "L-01: ตั้งค่า git lg, แตก Feature Branch, แก้ src/main.cpp และ Push",
                 "steps": [
+                    "ตั้งค่า Git Alias <code>git lg</code> (<code>log --oneline --all --graph --decorate</code>) เพื่อใช้ดูกราฟทุก Branch แบบสั้น",
                     "แตก Branch ใหม่ชื่อ <code>feature/fast-blink</code> จาก <code>main</code> ด้วย <code>git switch -c</code>",
-                    "เปิดไฟล์ <code>workshop/src/main.cpp</code> แล้วแก้บรรทัดที่ 15 จาก <code>clamp_interval(500)</code> เป็น <code>200</code>",
-                    "Stage ไฟล์และ Commit ด้วยรูปแบบ Conventional Commits (<code>feat(blink): ...</code>)",
-                    "ดึงฐานล่าสุดจาก <code>origin</code> แล้ว Rebase ต่อท้าย <code>origin/main</code>",
+                    "เปิดไฟล์ <code>src/main.cpp</code> (ใน <code>workshop</code>) แล้วแก้บรรทัดที่ 15 จาก <code>clamp_interval(500)</code> เป็น <code>200</code>",
+                    "รัน <code>git add .</code>, Commit แบบ Conventional Commits และ Push Branch <code>feature/fast-blink</code> ขึ้น <code>origin</code>",
                 ],
-                "code": """# 1. แตก branch ใหม่จาก main
+                "code": """# 1. ตั้งค่า git lg (หากยังไม่ได้ตั้งใน Lab 00) และแตก branch ใหม่จาก main:
+git config --local alias.lg "log --oneline --all --graph --decorate"
 git switch -c feature/fast-blink main
 
-# 2. เปิด src/main.cpp (ใน workshop) แก้บรรทัดที่ 15 ใน setup():
-#    blink_interval_ms = blink_math::clamp_interval(200);  // fast blink preset
-# จากนั้น Stage และ Commit แบบ Conventional Commits:
-git add src/main.cpp
+# 2. เปิด src/main.cpp แก้บรรทัดที่ 15 เป็น: blink_interval_ms = blink_math::clamp_interval(200);
+# จากนั้น Stage, Commit และ Push ขึ้น origin:
+git add .
 git commit -m "feat(blink): support fast blink interval"
-
-# 3. ดึงฐานล่าสุดจาก origin แล้ว Rebase:
-git fetch origin
-git rebase origin/main
-git log --graph --oneline --decorate -n 6""",
+git push -u origin feature/fast-blink
+git lg -n 5""",
             },
             {
-                "heading": "L-02: การแก้ Rebase Conflict, ออกจาก Vim และ Push ด้วย --force-with-lease",
+                "heading": "L-02: จำลอง Commit ใหม่บน main ให้กราฟแยก 2 เส้น แล้วสั่ง git rebase main",
                 "steps": [
-                    "ตั้งค่าให้ Git เปิดข้อความ Commit ด้วย VS Code แทน Vim (<code>git config --local core.editor \"code --wait\"</code>) — เมื่อแท็บ VS Code เด้งขึ้นมาให้กด <strong>Save แล้วปิดแท็บ</strong> เพื่อให้ Git ทำงานต่อ",
-                    "<strong>วิธีอ่าน Conflict ใน <code>src/main.cpp</code>:</strong> ช่วงระหว่าง <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> ถึง <code>=======</code> คือ<strong>โค้ดเดิมบน <code>origin/main</code></strong> ส่วนช่วงระหว่าง <code>=======</code> ถึง <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> คือ<strong>โค้ดใหม่จาก Commit ของเรา</strong> (ดูตัวอย่างจริงด้านล่าง)",
-                    "แก้ไฟล์โดย<strong>ลบเส้นแบ่งทั้ง 3 เส้น</strong> (<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>) ออกให้หมด เหลือเฉพาะโค้ดใหม่ที่ต้องการ จากนั้นรัน <code>git add src/main.cpp</code> แล้วต่อด้วย <code>git rebase --continue</code>",
-                    "หากเผลอเข้าหน้าจอดำ Vim ให้พิมพ์ <code>:wq</code> แล้วกด Enter เพื่อบันทึกและออก (หรือถอยกลับก่อน Rebase ด้วย <code>git rebase --abort</code>)",
-                    "Push หลัง Rebase ด้วย <code>git push --force-with-lease -u origin feature/fast-blink</code> (<strong>ห้าม</strong>รัน <code>git pull</code> ตามคำแนะนำ error และ<strong>ห้าม</strong> force-push เข้า <code>main</code> เด็ดขาด)",
+                    "<em>ทำไมต้องจำลอง Commit บน <code>main</code>?</em> หาก <code>main</code> ไม่มี Commit ใหม่เลย การสั่ง Rebase จะขึ้น <code>Current branch is up to date</code> เพราะกราฟเป็นเส้นตรงอยู่แล้ว",
+                    "สลับกลับไปที่ <code>main</code> (<code>git switch main</code>) แล้วเปิด <code>src/main.cpp</code> แก้บรรทัดที่ 15 เดียวกันเป็น <code>clamp_interval(300)</code>",
+                    "รัน <code>git add .</code>, Commit และ Push ขึ้น <code>origin main</code> จากนั้นรัน <code>git lg -n 5</code> จะเห็นกราฟแตกออกเป็น 2 เส้นแยกกัน",
+                    "สลับกลับมาที่ <code>feature/fast-blink</code> แล้วสั่ง <code>git rebase main</code> เพื่อยก Commit ของเราไปต่อท้าย <code>main</code> ล่าสุด (ขั้นตอนนี้จะเกิด Conflict ทันที)",
                 ],
-                "code": """# 1. ตั้งค่าให้ Git ใช้ VS Code แทน Vim (เวลาแก้ข้อความ Commit ให้ Save แล้วปิดแท็บ)
-git config --local core.editor "code --wait"
+                "code": """# 1. สลับไปที่ main แล้วแก้ src/main.cpp บรรทัดที่ 15 เป็น clamp_interval(300):
+git switch main
+# (แก้ src/main.cpp บรรทัดที่ 15 เป็น: blink_interval_ms = blink_math::clamp_interval(300); แล้วกด Save)
+git add .
+git commit -m "chore(blink): update default interval on main to 300ms"
+git push origin main
 
-# 2. ตัวอย่างหน้าตา Conflict จริงใน src/main.cpp:
-<<<<<<< HEAD                                          // <-- เริ่มส่วนโค้ดเดิมบน origin/main
-  blink_interval_ms = blink_math::clamp_interval(500);  // โค้ดเดิม (จาก origin/main)
+# 2. ดูกราฟที่แยกเป็น 2 เส้น แล้วสลับกลับมา Rebase บน feature/fast-blink:
+git lg -n 5
+git switch feature/fast-blink
+git rebase main""",
+            },
+            {
+                "heading": "L-03: วิธีอ่านและแก้ Rebase Conflict ใน src/main.cpp และ Push ด้วย --force-with-lease",
+                "code_font_size": 13,
+                "steps": [
+                    "<strong>วิธีอ่าน Conflict ใน <code>src/main.cpp</code>:</strong> ช่วงระหว่าง <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> ถึง <code>=======</code> คือ<strong>โค้ดเดิมบน <code>main</code> (<code>300</code>)</strong> ส่วนช่วงระหว่าง <code>=======</code> ถึง <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> คือ<strong>โค้ดใหม่จาก Commit ของเรา (<code>200</code>)</strong>",
+                    "แก้ไฟล์โดย<strong>ลบเส้นแบ่งทั้ง 3 เส้น</strong> (<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>) และโค้ดเดิมออก เหลือเฉพาะโค้ดใหม่ที่ต้องการแล้วกด Save",
+                    "รัน <code>git add .</code> แล้วตามด้วย <code>git rebase --continue</code> (เมื่อแท็บข้อความ Commit เด้งขึ้นมาใน VS Code ให้กด Save แล้วปิดแท็บ)",
+                    "รัน <code>git lg -n 5</code> เพื่อตรวจว่ากราฟเรียงเป็นเส้นตรงเส้นเดียวแล้ว จากนั้นอัปเดต Branch บน GitHub ด้วย <code>git push --force-with-lease -u origin feature/fast-blink</code>",
+                ],
+                "code": """# 1. ตัวอย่างหน้าตา Conflict จริงใน src/main.cpp:
+<<<<<<< HEAD                                          // <-- เริ่มส่วนโค้ดเดิมบน main
+  blink_interval_ms = blink_math::clamp_interval(300);  // โค้ดเดิม (จาก main ล่าสุด)
 =======                                               // <-- เส้นคั่นระหว่างโค้ดเดิมกับโค้ดใหม่
   blink_interval_ms = blink_math::clamp_interval(200);  // โค้ดใหม่ (จาก Commit ของเรา)
 >>>>>>> feat(blink): support fast blink interval      // <-- จบส่วนโค้ดใหม่
 
-# 3. แก้ให้เหลือเฉพาะโค้ดใหม่ที่ต้องการ (ลบเส้น <<<, ===, >>> ออกให้หมด):
+# 2. แก้ใน src/main.cpp ให้เหลือเฉพาะโค้ดใหม่บรรทัดเดียว (ลบเส้น <<<, ===, >>> ออกให้หมด):
   blink_interval_ms = blink_math::clamp_interval(200);
 
-# 4. บันทึกไฟล์แล้ว Stage + ทำ Rebase ต่อ (หรือยกเลิกด้วย: git rebase --abort):
-git add src/main.cpp
+# 3. บันทึกไฟล์แล้ว Stage + ทำ Rebase ต่อ (หากทำพลาดยกเลิกได้ด้วย: git rebase --abort):
+git add .
 git rebase --continue
 
-# 5. Push หลัง Rebase (Commit Hash เปลี่ยน จึงต้องใช้ --force-with-lease):
+# 4. ตรวจกราฟเส้นตรงด้วย git lg แล้ว Push หลัง Rebase ด้วย --force-with-lease:
+git lg -n 5
 git push --force-with-lease -u origin feature/fast-blink""",
             },
         ],
-        "expected_output": """$ git log --graph --oneline --decorate -n 4
+        "expected_output": """$ git lg -n 4
 * 9a4c21e (HEAD -> feature/fast-blink, origin/feature/fast-blink) feat(blink): support fast blink interval
-* 7c796a2 (origin/main, main) chore(workshop): restore starter skeleton files for student labs 02-06
-* f75e649 docs(workshop): add Lab 00 setup, consolidate installs, update slides and screenshots""",
+* 4d12b8c (origin/main, main) chore(blink): update default interval on main to 300ms
+* 00f0566 docs(scripts): add README for docs/scripts build helpers""",
         "results": [
-            "L-01: ผลลัพธ์จาก <code>git log --graph --oneline --decorate -n 6</code> (เป็นเส้นตรงเส้นเดียวหรือไม่)",
+            "L-03: ผลลัพธ์จาก <code>git lg -n 5</code> หลังแก้ Conflict และทำ Rebase สำเร็จ (กราฟเรียงเป็นเส้นตรงเส้นเดียวหรือไม่)",
         ],
         "questions": [
             "Q1: การทำงานบน Fork ของตัวเอง (<code>origin</code>) ร่วมกับ Feature Branch มีข้อดีทางวิศวกรรมอย่างไรเมื่อเทียบกับการ Push เข้า <code>main</code> โดยตรง?",
@@ -255,16 +261,17 @@ git push --force-with-lease -u origin feature/fast-blink""",
             "Q3: เหตุใดหลัง <code>git rebase</code> แล้วจึงต้องใช้ <code>git push --force-with-lease</code> แทน <code>git pull</code> หรือ <code>git push --force</code>?",
         ],
         "exercise": {
-            "code": "L-03",
+            "code": "L-04",
             "steps": [
-                "ตรวจสอบว่าอยู่บน Branch <code>feature/fast-blink</code> ที่มี Commit ใหม่ต่อปลาย <code>main</code> แบบเส้นตรง",
+                "ตรวจสอบด้วย <code>git lg -n 5</code> ว่าอยู่บน Branch <code>feature/fast-blink</code> ที่มี Commit ต่อปลาย <code>main</code> แบบเส้นตรง",
                 "รัน <code>uv run scripts/verify.py --module 1</code> จากในโฟลเดอร์ <code>workshop</code> เพื่อตรวจผล Lab 01",
             ],
             "snippet": """# ตรวจผล Module 1 (รันจากในโฟลเดอร์ workshop):
+git lg -n 5
 uv run scripts/verify.py --module 1""",
         },
         "screenshots": [
-            ("../images/term-01-git-log.png", "ตัวอย่างผลลัพธ์จาก git log --graph --oneline --decorate: ประวัติ Commit เรียงเป็นเส้นตรง"),
+            ("../images/term-01-git-log.png", "ตัวอย่างผลลัพธ์จาก git lg: ประวัติ Commit เรียงเป็นเส้นตรง"),
         ],
     },
     {
@@ -272,23 +279,23 @@ uv run scripts/verify.py --module 1""",
         "title": "Lab 02: YAML Issue Forms, Pull Request (Rebase) &amp; Branch Protection",
         "objectives": [
             "เรียนรู้การสร้างแบบฟอร์มแจ้งปัญหาและขอฟีเจอร์ด้วยไฟล์ YAML (<code>.github/ISSUE_TEMPLATE/*.yml</code>) และการใช้ PR Template",
-            "เรียนรู้การเปิด Pull Request ทั้งผ่านเว็บ GitHub และ VS Code Extension, ทำ Rebase and Merge และตั้ง Branch Protection บน <code>main</code>",
+            "เรียนรู้การเปิด Pull Request ผ่านหน้าเว็บ GitHub, ทำ Rebase and Merge และตั้ง Branch Protection บน <code>main</code>",
         ],
         "outcomes": [
             "แทนที่ Skeleton ใน <code>bug_report.yml</code>, <code>feature_request.yml</code> และ <code>config.yml</code> แล้วใช้งานฟอร์มบน GitHub ได้จริง",
-            "เปิด Pull Request เข้า <code>main</code>, ตรวจ Checks และ Merge แบบ Rebase พร้อมลบ Branch อัตโนมัติได้",
+            "เปิด Pull Request เข้า <code>main</code> บนหน้าเว็บ GitHub, ตรวจ Checks และ Merge แบบ Rebase พร้อมลบ Branch อัตโนมัติได้",
             "ตั้งค่า Branch Protection / Rulesets เพื่อบังคับ PR และ Linear History บน <code>main</code> รวมถึง Logout ออกจากเครื่องส่วนกลางได้ครบ",
         ],
         "tools": [
-            "GitHub Web (เปิด Issue &amp; PR) และ Extension <strong>GitHub Pull Requests</strong> จาก Lab 00",
+            "หน้าเว็บ GitHub (สำหรับเปิด Issue, เปิด Pull Request และตั้งค่า Branch Protection)",
             "ไฟล์ปลายทาง: <code>.github/ISSUE_TEMPLATE/*.yml</code> (มีโครง <code># TODO</code> อยู่แล้ว)",
             "ไฟล์ PR Template: <code>.github/pull_request_template.md</code> (มีให้ใน Repo แล้ว)",
             "วิดีโอประกอบ: <code>videos/02-pull-request-review.mp4</code>",
         ],
         "experiments": [
-            ("L-01", "แทนที่ไฟล์ Issue Forms (<code>bug_report.yml</code>, <code>feature_request.yml</code>, <code>config.yml</code>) แล้ว Push เข้า <code>main</code> บน Fork"),
-            ("L-02", "ทดลองกดเปิด Issue จริงบนหน้าเว็บ GitHub (แท็บ <strong>Issues -&gt; New issue</strong>) ด้วยฟอร์มที่สร้างไว้"),
-            ("L-03", "Push <code>feature/fast-blink</code> แล้วเปิด/Merge PR แบบ <strong>Rebase and merge</strong> (เลือกทำผ่านเว็บ GitHub หรือ VS Code Extension) + ตั้ง Branch Protection + Logout"),
+            ("L-01", "แทนที่ไฟล์ Issue Forms (<code>bug_report.yml</code>, <code>feature_request.yml</code>, <code>config.yml</code>) แล้ว Commit &amp; Push ขึ้น <code>feature/fast-blink</code>"),
+            ("L-02", "ทดลองกดเปิด Issue จริงบนหน้าเว็บ GitHub (แท็บ <strong>Issues -&gt; New issue</strong>)"),
+            ("L-03", "เปิดและ Merge Pull Request แบบ <strong>Rebase and merge</strong> บนหน้าเว็บ GitHub + ตั้ง Branch Protection + ซิงก์ <code>main</code>"),
         ],
         "details": [
             {
@@ -402,20 +409,20 @@ contact_links:
     about: เอกสารอ้างอิงไวยากรณ์ YAML สำหรับ GitHub Issue Forms""",
             },
             {
-                "heading": "L-01 (ส่วนที่ 4/4): ตรวจ YAML และ Push Issue Forms ขึ้น main บน Fork",
+                "heading": "L-01 (ส่วนที่ 4/4): ตรวจ YAML แล้ว Commit &amp; Push ขึ้น Branch feature/fast-blink",
                 "steps": [
                     "รันคำสั่งตรวจไวยากรณ์ YAML เพื่อเช็กว่าพิมพ์ย่อหน้าไม่ผิด",
-                    "Commit และ Push ขึ้น <code>main</code> บน Fork ของตัวเองก่อน (GitHub จะอ่าน Issue Template จาก branch <code>main</code> เท่านั้น และตอนนี้เรายังไม่ได้เปิด Branch Protection จึง Push เพื่อติดตั้งฟอร์มก่อนได้)",
+                    "เนื่องจากตอนนี้เราอยู่บน Branch <code>feature/fast-blink</code> ต่อจาก Lab 01 ให้ Stage ไฟล์ Issue Template แล้ว Commit บน Branch นี้ก่อน",
+                    "Push ขึ้น <code>origin</code> ด้วยคำสั่ง <code>git push -u origin feature/fast-blink</code> เพื่อเตรียมเปิด Pull Request เข้า <code>main</code>",
                 ],
                 "images": [
-                    ("../images/gh-02-issue-templates.png", "ตรวจสอบให้แน่ใจว่าทั้ง 3 ไฟล์ใน .github/ISSUE_TEMPLATE/ ถูก Push เข้า main บน Fork แล้ว"),
+                    ("../images/gh-02-issue-templates.png", "ตรวจสอบให้แน่ใจว่าทั้ง 3 ไฟล์ใน .github/ISSUE_TEMPLATE/ ถูกแก้ไขและ Commit เรียบร้อยแล้ว"),
                 ],
-                "code": """# ตรวจ YAML แล้วนำไฟล์ Issue Forms ขึ้น main บน Fork ก่อนเปิด Issue (รันจาก workshop):
+                "code": """# ตรวจ YAML แล้ว Commit & Push ขึ้น branch feature/fast-blink (รันจาก workshop):
 uv run --with pyyaml python -c "import yaml,glob; [yaml.safe_load(open(f,encoding='utf-8')) for f in glob.glob('../.github/**/*.yml',recursive=True)]; print('YAML OK')"
-git switch main
 git add ../.github/ISSUE_TEMPLATE/
 git commit -m "docs(github): add YAML issue forms and chooser config"
-git push origin main""",
+git push -u origin feature/fast-blink""",
             },
             {
                 "heading": "L-02: กดเปิด Issue จริงบนหน้าเว็บ GitHub (สังเกตหมายเลข #Issue)",
@@ -432,61 +439,48 @@ git push origin main""",
                 ],
             },
             {
-                "heading": "L-03 (วิธีที่ 1 — เว็บ GitHub): Push feature/fast-blink และเปิด PR แบบ Rebase and merge",
+                "heading": "L-03: เปิด PR บนหน้าเว็บ GitHub แบบ Rebase and merge + ตั้ง Branch Protection",
                 "steps": [
-                    "อัปเดต branch งานให้ทัน <code>main</code> บน Fork (<code>git switch feature/fast-blink</code> -> <code>git rebase main</code> -> <code>git push --force-with-lease -u origin feature/fast-blink</code>)",
                     "บนเว็บ GitHub: <code>[1]</code> เข้าแท็บ <strong>Pull requests</strong> แล้วกด <code>[2] New pull request</code>",
-                    "ในหน้า Compare: เลือก <code>[1] base: main &lt;- compare: feature/fast-blink</code> (เปลี่ยนช่องขวาจาก main เป็น feature branch ของคุณ)",
+                    "ในหน้า Compare: เลือก <code>[1] base: main &lt;- compare: feature/fast-blink</code> (เปลี่ยนช่องขวาจาก main เป็น <code>feature/fast-blink</code>)",
                     "พิมพ์ <code>Closes #&lt;เลข&gt;</code> ในกล่องข้อความแล้วกด <code>[2] Create pull request</code>",
-                    "กดลูกศรข้างปุ่ม Merge เลือก <strong>Rebase and merge</strong> และกด <strong>Delete branch</strong> หลัง Merge เสร็จ",
+                    "กดลูกศรข้างปุ่ม Merge เลือก <strong>Rebase and merge</strong> และกด <strong>Delete branch</strong> หลัง Merge เสร็จ จากนั้นกลับมาดึงโค้ดลง <code>main</code> ในเครื่อง",
+                    "<strong>ตั้ง Branch Protection บนเว็บ GitHub:</strong> เข้า Repo -> <strong>Settings -> Branches -> Add classic branch protection rule</strong> -> ใส่ pattern <code>main</code> แล้วติ๊ก <strong>Require a pull request before merging</strong> และ <strong>Require linear history</strong>",
                 ],
                 "images": [
                     ("../images/anno-02-pulls.png", "บนหน้า Fork: [1] คลิกแท็บ Pull requests -> [2] กดปุ่ม New pull request"),
                     ("../images/anno-02-compare.png", "หน้า Compare: [1] เลือก base: main <- compare: feature/fast-blink -> ใส่ Closes #<เลข> -> [2] กด Create pull request"),
                 ],
-            },
-            {
-                "heading": "L-03 (วิธีที่ 2 — VS Code Extension): เปิด PR ใน VS Code + ตั้ง Branch Protection + Logout",
-                "steps": [
-                    "<em>(เลือกทำวิธีนี้แทนวิธีที่ 1 ได้)</em> กดไอคอน <strong>GitHub (รูปแมว)</strong> บนแถบซ้าย Activity Bar ของ VS Code",
-                    "กด <strong>Sign in with GitHub</strong> แล้วกด <strong>Create Pull Request</strong> (Base = <code>main</code>, ใส่ <code>Closes #&lt;เลข&gt;</code>) จากนั้น Merge แบบ Rebase",
-                    "<strong>ตั้ง Branch Protection บนเว็บ GitHub:</strong> เข้า Repo -> <strong>Settings -> Branches -> Add classic branch protection rule</strong> (หรือ Rulesets)",
-                    "ใส่ pattern <code>main</code> แล้วติ๊ก <strong>Require a pull request before merging</strong> และ <strong>Require linear history</strong>",
-                    "<strong>เครื่องส่วนกลางต้อง Logout ทันที:</strong> คลิกไอคอน <strong>Accounts (มุมซ้ายล่าง)</strong> ใน VS Code -> เลือกบัญชี GitHub -> <strong>Sign Out</strong>",
-                ],
-                "images": [
-                    ("../images/anno-02-vscode-pr.png", "Extension GitHub Pull Requests ที่ติดตั้งไว้จาก Lab 00 (กดไอคอน GitHub แถบซ้ายเพื่อ Sign in / Create PR และกด Accounts -> Sign Out เมื่อเลิกใช้)"),
-                ],
-                "code": """# หากเปิด PR ผ่านเว็บหรือ VS Code เสร็จแล้ว และใช้เครื่องรวม ให้ Logout ทั้ง 2 จุดนี้:
-# 1. VS Code: คลิกไอคอน Accounts (มุมซ้ายล่าง) -> <your-username> (GitHub) -> Sign Out
-# 2. Browser: กด Sign out บน github.com เมื่อเลิกใช้งาน""",
+                "code": """# หลังกด Rebase and merge และ Delete branch บนหน้าเว็บ GitHub เสร็จแล้ว
+# ให้สลับกลับมาที่ main ในเครื่องและดึงโค้ดล่าสุดลงมา:
+git switch main
+git pull origin main
+git lg -n 5""",
             },
         ],
         "expected_output": """# บนหน้าเว็บ GitHub หลัง Merge PR ด้วย Rebase and merge:
-✓ Merged 1 commit into main from feature/fast-blink
+✓ Merged commits into main from feature/fast-blink
 ✓ Issue #1 closed automatically (via "Closes #1")
-✓ Branch feature/fast-blink deleted
-
-# เมื่อตรวจสอบผ่าน VS Code Extension หลังใช้งานเสร็จ:
-VS Code Accounts -> <your-username> (GitHub) -> Sign Out (เรียบร้อย)""",
+✓ Branch feature/fast-blink deleted""",
         "results": [
-            "L-02: เลข Issue และ Labels ที่แสดงบนหน้าเว็บ GitHub หลัง Push ไฟล์ <code>.yml</code> เข้า <code>main</code>",
-            "L-03: เปรียบเทียบขั้นตอนเปิด PR ผ่าน<strong>เว็บ GitHub</strong> กับ <strong>VS Code Extension</strong> และตรวจสถานะหลังตั้ง Branch Protection",
+            "L-02: เลข Issue และ Labels ที่แสดงบนหน้าเว็บ GitHub",
+            "L-03: สถานะของ Pull Request หลังกด <strong>Rebase and merge</strong> บนหน้าเว็บ GitHub และผลหลังตั้ง Branch Protection",
         ],
         "questions": [
             "Q1: การใช้ Issue Form แบบ <code>.yml</code> ดีกว่าการปล่อยให้กรอก Issue แบบข้อความเปล่าอย่างไร?",
-            "Q2: ตัวเลือก <strong>Require linear history</strong> ใน Branch Protection ช่วยป้องกันอะไร และเหตุใดจึงควร Sign Out ออกจาก GitHub ใน VS Code หลังเลิกใช้งานเครื่องส่วนกลาง?",
+            "Q2: ตัวเลือก <strong>Require linear history</strong> ใน Branch Protection ช่วยป้องกันอะไร?",
             "Q3: ทำไมหลัง Merge PR เข้า <code>main</code> แล้วจึงควรลบ Branch ย่อยทิ้งทันที?",
         ],
         "exercise": {
             "code": "L-04",
             "steps": [
                 "เปิด Issue 1 รายการด้วยฟอร์ม <code>feature_request.yml</code> บนหน้าเว็บ GitHub",
-                "เปิด PR เข้า <code>main</code> (ผ่านเว็บหรือ VS Code Extension) พร้อมใส่ <code>Closes #&lt;เลข&gt;</code> เพื่อปิด Issue",
-                "รัน <code>uv run scripts/verify.py --module 2</code> จากใน <code>workshop</code> เพื่อตรวจผล (หากใช้เครื่องห้องแล็บอย่าลืม Sign Out)",
+                "เปิด PR เข้า <code>main</code> บนหน้าเว็บ GitHub พร้อมใส่ <code>Closes #&lt;เลข&gt;</code> เพื่อปิด Issue แล้วกด <strong>Rebase and merge</strong>",
+                "รัน <code>uv run scripts/verify.py --module 2</code> จากใน <code>workshop</code> เพื่อตรวจผล (หากใช้เครื่องห้องแล็บอย่าลืม Sign Out จากเว็บ GitHub เมื่อเลิกเรียน)",
             ],
-            "snippet": """# ในรายละเอียด PR (ผ่านเว็บ GitHub หรือ VS Code Extension) ให้ใส่: Closes #<เลข>
-# หากใช้เครื่องห้องแล็บ อย่าลืม VS Code Accounts -> Sign Out หลังทำเสร็จ!
+            "snippet": """# ในรายละเอียด PR บนหน้าเว็บ GitHub ให้ใส่: Closes #<เลข>
+git switch main
+git pull origin main
 uv run scripts/verify.py --module 2""",
         },
         "screenshots": [
@@ -566,9 +560,9 @@ repos:
                 "steps": [
                     "<strong>สำคัญ:</strong> ไฟล์ <code>.pre-commit-config.yaml</code> ต้องวางไว้ที่ <strong>Root ของ Git Repo</strong> (ข้างๆ <code>.git/</code>) เพื่อให้ <code>git commit</code> อ่านได้ ส่วนตัวคำสั่งเรียกใช้แบบ Local จาก <code>workshop/.venv</code> ด้วย <code>uv run pre-commit ...</code>",
                     "รัน <code>git add ../.pre-commit-config.yaml</code> จากในโฟลเดอร์ <code>workshop</code> ก่อนติดตั้ง Hook เสมอ",
-                    "ติดตั้ง Hook ทั้ง 2 Stage ด้วย <code>uv run pre-commit install</code> และ <code>uv run pre-commit install --hook-type commit-msg</code> (ตัว Hook จะจำ path ไปที่ <code>workshop/.venv</code> ให้อัตโนมัติ)",
+                    "ติดตั้ง Hook ทั้ง 2 Stage ด้วย <code>uv run pre-commit install</code> และ <code>uv run pre-commit install --hook-type commit-msg</code>",
                     "รัน <code>uv run pre-commit run --all-files</code> (รอบแรกจะโหลด Environment ของ Hook สักครู่)",
-                    "รัน <code>git add -u</code> อีกรอบเผื่อ <code>end-of-file-fixer</code> เติมบรรทัดว่างท้ายไฟล์ให้ (กัน Error <code>Your pre-commit configuration is unstaged</code>; ข้อความ <code>LF will be replaced by CRLF</code> บน Windows เป็นเรื่องปกติ)",
+                    "รัน <code>git add ../.pre-commit-config.yaml</code> และ <code>git add .</code> อีกรอบเผื่อ <code>end-of-file-fixer</code> เติมบรรทัดว่างท้ายไฟล์ให้ แล้วจึง Commit",
                 ],
                 "code": """# 1. Stage ไฟล์ config ที่ root ก่อนเสมอ + ผูก Hook ทั้ง 2 stage เข้า .git/hooks/:
 git add ../.pre-commit-config.yaml
@@ -579,28 +573,43 @@ uv run pre-commit install --hook-type commit-msg
 uv run pre-commit run --all-files
 
 # 3. Stage ไฟล์ที่ end-of-file-fixer อาจปรับปรุงให้เรียบร้อย แล้ว Commit:
-git add -u
+git add ../.pre-commit-config.yaml
+git add .
 git commit -m "chore(hooks): configure pre-commit and clang-format" """,
             },
             {
-                "heading": "L-02: ทดสอบ Break-Fix แยก 2 ขั้น (ขั้น A: Format Hook -> ขั้น B: Commit-Msg Hook)",
+                "heading": "L-02 (ขั้น A): ทดสอบ Format Hook — เปิดหน้าโค้ดดู clang-format แก้ช่องว่างอัตโนมัติ",
                 "steps": [
-                    "<strong>ขั้น A (ทดสอบ Format Hook):</strong> เพิ่มบรรทัดที่จัดช่องว่างผิดจงใจ <code>int   precommit_test =  1;</code> ท้ายฟังก์ชัน <code>setup()</code> ใน <code>src/main.cpp</code> (ใน <code>workshop</code>)",
-                    "Stage และลอง Commit -> สังเกตว่า <code>clang-format</code> ขึ้น Failed และจัดช่องว่างใหม่ให้เราอัตโนมัติ",
-                    "<strong>ขั้น B (ทดสอบ Commit-Msg Hook):</strong> รัน <code>git add src/main.cpp</code> แล้วลอง Commit ด้วยข้อความผิดกฎ <code>\"bad commit message\"</code> -> ดู hook บล็อก",
-                    "<strong>ขั้น C (Commit ให้ผ่าน):</strong> แก้ข้อความเป็น Conventional Commit แล้ว Commit ให้สำเร็จ",
+                    "เปิดไฟล์ <code>src/main.cpp</code> (ใน <code>workshop</code>) ค้างไว้ใน VS Code แล้วเพิ่มบรรทัดที่<strong>เว้นช่องว่างเกินจงใจ</strong>ท้ายฟังก์ชัน <code>setup()</code> ตามตัวอย่างในกล่องโค้ดด้านล่าง แล้วกด Save",
+                    "เปิดหน้าโค้ด <code>src/main.cpp</code> คู่กับ Terminal ไว้ แล้วรันคำสั่ง <code>uv run pre-commit run --all-files</code>",
+                    "สังเกตใน Terminal จะขึ้น <code>clang-format...Failed</code> (<code>files were modified by this hook</code>) <strong>และดูที่หน้าโค้ด <code>src/main.cpp</code> จะเห็นว่าตัว Hook แก้ช่องว่างให้ถูก Format เป็น <code>int precommit_test = 1;</code> อัตโนมัติทันที</strong>",
+                    "เมื่อ Hook แก้โค้ดให้ถูก Format เสร็จแล้ว ให้รัน <code>git add .</code> ใหม่เพื่อ Stage ไฟล์ที่ถูกจัดรูปแบบแล้ว",
                 ],
-                "code": """# ขั้น A: เพิ่มท้ายฟังก์ชัน setup() ใน workshop/src/main.cpp:  int   precommit_test =  1;
-git add src/main.cpp
-git commit -m "style: test clang-format"
-# -> จะขึ้น clang-format Failed (files were modified by this hook) เพราะ hook จัดช่องว่างให้!
+                "code": """// 1. เปิด src/main.cpp ค้างไว้ แล้วเพิ่มบรรทัดที่เว้นวรรคเกินจงใจท้ายฟังก์ชัน setup():
+void setup() {
+  Serial.begin(115200);
+  pinMode(LED_PIN, OUTPUT);
+  blink_interval_ms = blink_math::clamp_interval(200);  // fast blink preset
+  int   precommit_test =  1;   // <-- เว้นช่องว่างเกินจงใจ (กด Save แล้วเปิดหน้าโค้ดดูไว้)
+}
 
-# ขั้น B: Stage ไฟล์ที่ถูกจัดฟอร์แมตแล้ว จากนั้นลองตั้งชื่อ Commit ผิดกฎ:
-git add src/main.cpp
+# 2. รัน pre-commit ใน Terminal (จะขึ้น Failed แต่จะแก้ไฟล์ src/main.cpp ให้ถูก format อัตโนมัติ):
+uv run pre-commit run --all-files
+
+# 3. พอเห็นหน้าโค้ดถูกแก้เป็น `int precommit_test = 1;` แล้ว ให้ Stage ไฟล์ใหม่ด้วย git add .:
+git add .""",
+            },
+            {
+                "heading": "L-02 (ขั้น B): ทดสอบ Commit-Msg Hook บล็อกข้อความผิดกฎ และ Commit ให้ผ่าน",
+                "steps": [
+                    "หลังจากรัน <code>git add .</code> แล้ว ให้ลองสั่ง Commit ด้วยข้อความที่ผิดรูปแบบ Conventional Commits (<code>git commit -m \"bad commit message\"</code>)",
+                    "สังเกตว่า <code>conventional-pre-commit</code> จะขึ้น <code>Failed</code> และบล็อกไม่ให้ Commit ทันที",
+                    "แก้ข้อความ Commit ให้ตรงตามรูปแบบ Conventional Commits (<code>style: ...</code>) แล้วสั่ง Commit ใหม่จนสำเร็จ",
+                ],
+                "code": """# 1. ลองตั้งชื่อ Commit ผิดกฎ (จะถูก conventional-pre-commit บล็อกทันที):
 git commit -m "bad commit message"
-# -> รอบนี้ pre-commit ผ่านแล้ว ทำให้ commit-msg ทำงานและบล็อกข้อความผิดทันที!
 
-# ขั้น C: แก้ข้อความเป็น Conventional Commit แล้ว Commit ให้สำเร็จ:
+# 2. แก้ข้อความเป็น Conventional Commit แล้ว Commit ให้สำเร็จ:
 git commit -m "style: format main.cpp with clang-format" """,
             },
         ],
@@ -740,49 +749,54 @@ void test_calculate_cycle_ms(void) {
 }""",
             },
             {
-                "heading": "L-03 (ขั้นที่ 1/2): รัน Test & Build และวิธีแก้ปัญหาที่พบบ่อยบน Windows",
+                "heading": "L-03 (ขั้นที่ 1/2): รัน Test &amp; Build บนเครื่อง",
                 "steps": [
                     "ศึกษาไฟล์ <code>test/test_esp32/test_hardware.cpp</code> ที่มีให้ใน <code>workshop</code>",
+                    "หากเปิด Terminal หน้าต่างใหม่ ให้เพิ่ม PATH ของ MSYS2 (<code>$env:Path = \"C:\\msys64\\ucrt64\\bin;$env:Path\"</code>) ก่อนรัน Native Test",
                     "รัน <code>uv run pio test -e native -v</code> จากในโฟลเดอร์ Workspace <code>workshop</code>",
-                    "<em>กรณีไม่มี <code>gcc</code> บน Windows:</em> สามารถลง WinLibs หรือข้ามไปดูผลบน Linux Cloud CI ใน Lab 05 ได้ (<code>verify.py</code> จะขึ้น <code>[WARN]</code> ไม่ถือว่า FAIL)",
-                    "รัน <code>uv run pio run -e esp32doit-devkit-v1</code> เพื่อคอมไพล์เฟิร์มแวร์ (ไม่ต้องเสียบบอร์ด; เฉพาะ <code>pio test -e esp32doit-devkit-v1</code> หรือ upload จึงจะใช้ COM Port)",
+                    "รัน <code>uv run pio run -e esp32doit-devkit-v1</code> เพื่อคอมไพล์เฟิร์มแวร์ (ไม่ต้องเสียบบอร์ดจริง)",
                 ],
-                "code": """# 1. รัน Native Unit Test บน Host PC (จากใน workshop):
+                "code": """# 1. ตั้ง PATH ของ MSYS2 (หากเปิด Terminal ใหม่) แล้วรัน Native Unit Test:
+$env:Path = "C:\\msys64\\ucrt64\\bin;$env:Path"
 uv run pio test -e native -v
 
-# 2. หากเจอ Error `'gcc' is not recognized`: ติดตั้ง WinLibs แล้วเปิด Terminal ใหม่ (หรือไปตรวจบน CI ใน Lab 05):
-winget install BrechtSanders.WinLibs.POSIX.UCRT
-g++ --version
-
-# 3. Build เฟิร์มแวร์ .bin (หากเจอ cc1plus: too many filenames ให้ตั้ง $env:TEMP ก่อน):
-New-Item -ItemType Directory -Force C:\\Temp | Out-Null
-$env:TEMP="C:\\Temp"; $env:TMP="C:\\Temp"
+# 2. Build เฟิร์มแวร์ .bin สำหรับบอร์ด ESP32:
 uv run pio run -e esp32doit-devkit-v1""",
             },
             {
                 "heading": "L-03 (ขั้นที่ 2/2): บันทึกการเปลี่ยนแปลงขึ้น Git (เพื่อทดสอบบน CI ใน Lab 05)",
                 "steps": [
-                    "Stage ไฟล์ <code>platformio.ini</code> และ <code>test/test_native/test_main.cpp</code>",
+                    "รัน <code>git add .</code> เพื่อ Stage ไฟล์ <code>platformio.ini</code> และ <code>test/test_native/test_main.cpp</code>",
                     "Commit ด้วยข้อความ Conventional Commits และ Push ขึ้น Fork",
-                    "<em>หมายเหตุ:</em> หากคำสั่ง <code>pio</code> ไม่อยู่ใน PATH ให้ใช้ <code>&amp; \"$env:USERPROFILE\\.platformio\\penv\\Scripts\\pio.exe\"</code> แทนได้",
                 ],
                 "code": """# Stage, Commit (pre-commit จะจัด clang-format ให้อัตโนมัติ) และ Push:
-git add platformio.ini test/test_native/test_main.cpp
+git add .
 git commit -m "test(native): add [env:native] and blink_math unity tests"
 git push origin HEAD""",
             },
         ],
-        "expected_output": """$ pio test -e native -v
-test/test_native/test_main.cpp:~: test_add_numbers_positive    [PASSED]
-test/test_native/test_main.cpp:~: test_clamp_interval_bounds   [PASSED]
-test/test_native/test_main.cpp:~: test_next_led_state_toggles  [PASSED]
-test/test_native/test_main.cpp:~: test_calculate_cycle_ms      [PASSED]
------------------------ 4 Tests 0 Failures 0 Ignored -----------------------
+        "expected_output": """(esp32-git-workshop) PS C:\\Users\\LabRoom\\Desktop\\git-practice\\workshop> uv run pio test -e native -v
+Collected 2 tests (test_esp32, test_native)
 
-$ pio run -e esp32doit-devkit-v1
-RAM:   [=         ]  ~6.7% (used ~22 KB from 327680 bytes)
-Flash: [==        ] ~22.2% (used ~291 KB from 1310720 bytes)
-========================= [SUCCESS] Took ~20s =========================""",
+Processing test_native in native environment
+----------------------------------------------------------------------------------------------------
+Building...
+Testing...
+test\\test_native\\test_main.cpp:35:test_add_numbers_positive:PASS
+test\\test_native\\test_main.cpp:36:test_clamp_interval_bounds:PASS
+test\\test_native\\test_main.cpp:37:test_next_led_state_toggles:PASS
+test\\test_native\\test_main.cpp:38:test_calculate_cycle_ms:PASS
+
+-----------------------
+4 Tests 0 Failures 0 Ignored
+OK
+---------------------------------- native:test_native [PASSED] Took 2.08 seconds ----------------------------------
+
+============================================= SUMMARY =============================================
+Environment    Test         Status    Duration
+-------------  -----------  --------  ------------
+native         test_native  PASSED    00:00:02.083
+============================ 4 test cases: 4 succeeded in 00:00:02.083 ============================""",
         "results": [
             "L-03 (Unit Test): จำนวน Test Cases ที่รันผ่านบน <code>[env:native]</code> (หรือบันทึก <code>[WARN]</code> กรณีเครื่องไม่มี <code>gcc</code>)",
             "L-03 (Firmware Build): ขนาด RAM และ Flash ที่ใช้จากการ Build <code>esp32doit-devkit-v1</code>",
@@ -1153,7 +1167,7 @@ uv run esptool --chip esp32 --port COM3 --baud 460800 write-flash 0x0 esp32doit-
                 "steps": [
                     "<strong>จุดที่ 1 — VS Code:</strong> คลิกไอคอน <strong>Accounts</strong> (รูปคนมุมซ้ายล่าง) -> เลือกบัญชี GitHub -> กด <strong>Sign Out</strong>",
                     "<strong>จุดที่ 2 — Windows Credential Manager:</strong> ลบ Token ของ Git ออกจากเครื่อง (<code>cmdkey /list</code> และ <code>cmdkey /delete:git:https://github.com</code> หรือลบผ่าน Control Panel)",
-                    "<strong>จุดที่ 3 — Browser &amp; Workspace:</strong> กด <strong>Sign out</strong> บนเว็บ <code>github.com</code> แล้วลบโฟลเดอร์ <code>C:\\ws\\git-practice</code> และไฟล์ <code>.bin</code> ใน Downloads ออก",
+                    "<strong>จุดที่ 3 — Browser &amp; Workspace:</strong> กด <strong>Sign out</strong> บนเว็บ <code>github.com</code> แล้วลบโฟลเดอร์ <code>$HOME\\Desktop\\git-practice</code> และไฟล์ <code>.bin</code> ใน Downloads ออก",
                 ],
                 "code": """# [1] VS Code: คลิกไอคอน Accounts (มุมซ้ายล่าง) -> <username> (GitHub) -> Sign Out
 
@@ -1161,9 +1175,9 @@ uv run esptool --chip esp32 --port COM3 --baud 460800 write-flash 0x0 esp32doit-
 cmdkey /list
 # cmdkey /delete:git:https://github.com  (หรือลบผ่าน Control Panel -> Credential Manager)
 
-# [3] Browser & Workspace: กด Sign out บน github.com แล้วลบโฟลเดอร์งาน / Downloads (.bin)
-cd C:\\
-Remove-Item -Recurse -Force C:\\ws\\git-practice""",
+# [3] Browser & Workspace: กด Sign out บน github.com แล้วลบโฟลเดอร์งานบน Desktop
+cd $HOME\\Desktop
+Remove-Item -Recurse -Force $HOME\\Desktop\\git-practice""",
             },
         ],
         "expected_output": """# บนหน้าเว็บ GitHub -> แท็บ Releases:
@@ -1369,9 +1383,6 @@ TEMPLATE = """<!DOCTYPE html>
   <h3 class="sec">บันทึกผล (Results)</h3>
   {results_html}
 
-  <h3 class="sec">การสังเกตและตอบคำถาม (Observation and Questions)</h3>
-  {questions_html}
-
   <h3 class="sec" style="text-decoration: underline;">แบบฝึกหัด</h3>
   <div class="exp-row">
     <span class="exp-code">{ex_code}:</span>
@@ -1407,26 +1418,24 @@ def build_lab(lab: dict) -> None:
         steps = item.get("steps", [])
         desc = item.get("desc", "")
         code = item.get("code", "")
+        code_font_size = item.get("code_font_size", 14)
         imgs = item.get("images", [])
         blk = f'<div class="step-heading">{heading}</div>'
+        for src, cap in imgs:
+            blk += f'<div class="shot-card" style="margin:21pt 0 21pt 12px;"><img src="{src}" alt="{html.escape(cap)}"/><div class="shot-cap">{html.escape(cap)}</div></div>'
         if steps:
             blk += _render_steps_html(steps)
         elif desc:
             blk += f'<div class="exp-row">{desc}</div>'
         if code:
-            blk += f'<div class="code-box">{html.escape(code)}</div>'
-        for src, cap in imgs:
-            blk += f'<div class="shot-card" style="margin:21pt 0 21pt 12px;"><img src="{src}" alt="{html.escape(cap)}"/><div class="shot-cap">{html.escape(cap)}</div></div>'
+            style_attr = f' style="font-size: {code_font_size}pt;"' if code_font_size != 14 else ""
+            blk += f'<div class="code-box"{style_attr}>{html.escape(code)}</div>'
         detail_blocks.append(blk)
     details_html = "".join(detail_blocks)
     expected_output_html = html.escape(lab["expected_output"])
     results_html = "".join(
         f'<div class="q-block">{r}<div class="fill-line"></div><div class="fill-line"></div></div>'
         for r in lab["results"]
-    )
-    questions_html = "".join(
-        f'<div class="q-block">{q}<div class="fill-line"></div><div class="fill-line"></div></div>'
-        for q in lab["questions"]
     )
     ex_steps = lab["exercise"].get("steps") or ([lab["exercise"]["desc"]] if lab["exercise"].get("desc") else [])
     ex_steps_html = _render_steps_html(ex_steps)
@@ -1445,7 +1454,6 @@ def build_lab(lab: dict) -> None:
         details_html=details_html,
         expected_output_html=expected_output_html,
         results_html=results_html,
-        questions_html=questions_html,
         ex_code=lab["exercise"]["code"],
         ex_steps_html=ex_steps_html,
         ex_snippet=html.escape(lab["exercise"]["snippet"]),

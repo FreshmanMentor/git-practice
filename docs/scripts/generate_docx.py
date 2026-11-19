@@ -140,7 +140,7 @@ def _ensure_blank_lines(doc: Document, count: int = 1) -> None:
         set_run_font(r, FONT_THAI, BODY_SIZE)
 
 
-def add_code_box(doc: Document, code_text: str, dark: bool = False) -> None:
+def add_code_box(doc: Document, code_text: str, dark: bool = False, font_size: float = BODY_SIZE) -> None:
     """Insert generous blank spacing before and after every code block."""
     _ensure_blank_lines(doc, 1)
     tbl = doc.add_table(rows=1, cols=1)
@@ -158,7 +158,7 @@ def add_code_box(doc: Document, code_text: str, dark: bool = False) -> None:
     set_run_font(
         run,
         FONT_MONO,
-        BODY_SIZE,
+        font_size,
         color=RGBColor(0xE2, 0xE8, 0xF0) if dark else RGBColor(0x0F, 0x17, 0x2A),
     )
     _ensure_blank_lines(doc, 1)
@@ -312,6 +312,7 @@ def build_docx(lab: dict) -> Path:
         steps = item.get("steps", [])
         desc = item.get("desc", "")
         code = item.get("code", "")
+        code_font_size = float(item.get("code_font_size", BODY_SIZE))
         imgs = item.get("images", [])
 
         _ensure_blank_lines(doc, 1)
@@ -322,6 +323,10 @@ def build_docx(lab: dict) -> Path:
         r = p.add_run(html.unescape(heading))
         set_run_font(r, FONT_THAI, HEADING_SIZE, bold=True, color=RGBColor(0x0F, 0x17, 0x2A))
 
+        for rel_src, cap in imgs:
+            img_path = (DOCS_DIR / "labs_html" / rel_src).resolve()
+            if img_path.exists():
+                add_picture_block(doc, img_path, cap, width_inches=6.5)
         if steps:
             add_step_lines(doc, steps)
         elif desc:
@@ -331,18 +336,14 @@ def build_docx(lab: dict) -> Path:
             p_desc.paragraph_format.space_after = Pt(3)
             add_rich_runs(p_desc, desc, base_size=BODY_SIZE)
         if code:
-            add_code_box(doc, code, dark=False)
-        for rel_src, cap in imgs:
-            img_path = (DOCS_DIR / "labs_html" / rel_src).resolve()
-            if img_path.exists():
-                add_picture_block(doc, img_path, cap, width_inches=6.5)
+            add_code_box(doc, code, dark=False, font_size=code_font_size)
 
     # 6. Expected Output
     add_section_heading(doc, "6. ตัวอย่างผลลัพธ์ใน Terminal (Expected Output)")
     add_code_box(doc, lab["expected_output"], dark=True)
 
-    # 7. Student Results & Screenshots
-    add_section_heading(doc, "7. บันทึกผลการทดลองของนักเรียน (Results & Screenshots)")
+    # 7. Student Results
+    add_section_heading(doc, "7. บันทึกผลการทดลอง (Results)")
     for res in lab["results"]:
         p = doc.add_paragraph()
         p.paragraph_format.space_after = Pt(3)
@@ -350,24 +351,8 @@ def build_docx(lab: dict) -> Path:
         add_rich_runs(p, res, base_size=BODY_SIZE)
         add_paste_box(doc, "[วางผลลัพธ์ Terminal หรือข้อความคำตอบที่นี่]", min_height_inches=0.85)
 
-    p_shot = doc.add_paragraph()
-    p_shot.paragraph_format.space_after = Pt(3)
-    p_shot.paragraph_format.keep_with_next = True
-    r_shot = p_shot.add_run("ภาพหน้าจอหลักฐานการปฏิบัติการของนักเรียน (Student Screenshot):")
-    set_run_font(r_shot, FONT_THAI, BODY_SIZE, bold=True, color=RGBColor(0x0F, 0x17, 0x2A))
-    add_paste_box(doc, "[วางภาพหน้าจอ / Paste Screenshot ผลลัพธ์ของนักเรียนที่นี่]", min_height_inches=1.6)
-
-    # 8. Observation and Questions
-    add_section_heading(doc, "8. การสังเกตและตอบคำถาม (Observation and Questions)")
-    for q in lab["questions"]:
-        p = doc.add_paragraph()
-        p.paragraph_format.space_after = Pt(3)
-        p.paragraph_format.keep_with_next = True
-        add_rich_runs(p, q, base_size=BODY_SIZE)
-        add_paste_box(doc, "[พิมพ์คำตอบของนักเรียนที่นี่]", min_height_inches=0.75)
-
-    # 9. Exercise
-    add_section_heading(doc, "9. แบบฝึกหัด (Exercise)")
+    # 8. Exercise
+    add_section_heading(doc, "8. แบบฝึกหัด (Exercise)")
     p_ex = doc.add_paragraph()
     p_ex.paragraph_format.space_after = Pt(3)
     r_ex = p_ex.add_run(f"{lab['exercise']['code']}:")
@@ -378,8 +363,8 @@ def build_docx(lab: dict) -> Path:
     add_code_box(doc, lab["exercise"]["snippet"], dark=False)
     add_paste_box(doc, "[วางผลลัพธ์ verify.py หรือภาพหน้าจอส่งงานที่นี่]", min_height_inches=0.9)
 
-    # 10. Reference Screenshots
-    add_section_heading(doc, "10. ภาพประกอบผลลัพธ์จริงสำหรับเทียบผล (Reference Screenshots)")
+    # 9. Reference Screenshots
+    add_section_heading(doc, "9. ภาพประกอบผลลัพธ์จริงสำหรับเทียบผล (Reference Screenshots)")
     for rel_src, cap in lab["screenshots"]:
         img_path = (DOCS_DIR / "labs_html" / rel_src).resolve()
         if img_path.exists():

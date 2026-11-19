@@ -1,7 +1,6 @@
 # ==============================================================================
 # Skeleton สำหรับ LAB02: ตั้งค่าหน้าเลือก Issue Template (Issue Chooser)
-# คู่มืออ้างอิง : docs/labs/LAB02-Issue_Forms_PR_Protection.pdf
-# ไฟล์เฉลย     : exercises/solutions/.github/ISSUE_TEMPLATE/config.yml
+# คู่มืออ้างอิง : exercises/labs/LAB02-Issue_Forms_PR_Protection.pdf
 # ==============================================================================
 
 # ปิดการสร้าง Issue แบบหน้าว่าง เพื่อบังคับให้ใช้ Issue Forms (.yml)

@@ -75,7 +75,7 @@ def main() -> int:
     ok, ver = check_cmd(["git", "--version"])
     print(f"[{'OK' if ok else 'MISSING'}] Git: {ver or 'ไม่พบ git'}")
     if not ok:
-        print("   -> แก้ไข (Windows): winget install Git.Git  (หรือโหลดจาก https://git-scm.com/)")
+        print("   -> แก้ไข (Windows): ดาวน์โหลดและติดตั้งจาก https://git-scm.com/download/win")
         fails += 1
 
     ok_name, name = check_cmd(["git", "config", "user.name"], cwd=REPO_ROOT)
@@ -131,34 +131,14 @@ def main() -> int:
         warns += 1
 
     # 6. gcc / g++ สำหรับ pio test -e native ใน Lab 04
-    gcc = shutil.which("gcc") or shutil.which("g++")
+    gcc = shutil.which("g++") or shutil.which("gcc")
     if gcc:
         ok, ver = check_cmd([gcc, "--version"])
         print(f"[OK] C/C++ Compiler (สำหรับ pio test -e native): {ver}")
     else:
-        print("[WARN] ไม่พบ gcc/g++ ใน PATH (Windows ต้องติดตั้ง WinLibs เพื่อรัน `pio test -e native` ในเครื่อง)")
-        print("   -> แก้ไข (Windows): winget install BrechtSanders.WinLibs.POSIX.UCRT  (เปิด Terminal ใหม่แล้วเช็ก `g++ --version`)")
-        print("   -> หากเครื่องห้องแล็บล็อกสิทธิ์: ใช้ Build ESP32 ในเครื่อง แล้วตรวจผล `[env:native]` บน Cloud CI ใน Lab 05 แทนได้")
+        print("[WARN] ไม่พบ gcc/g++ ใน PATH (ต้องใช้รัน `uv run pio test -e native -v` ใน Lab 04)")
+        print('   -> แก้ไขใน PowerShell (MSYS2): $env:Path = "C:\\msys64\\ucrt64\\bin;$env:Path"  (แล้วเช็ก `g++ --version`)')
         warns += 1
-
-    # 7. Windows TEMP probe (กันปัญหา cc1plus.exe: too many filenames / @C:\WINDOWS\TEMP\...)
-    if sys.platform == "win32":
-        temp_dir = os.environ.get("TEMP") or os.environ.get("TMP") or ""
-        temp_warn = ""
-        if not temp_dir or r"\windows\temp" in temp_dir.lower():
-            temp_warn = f"TEMP ชี้ไปที่ `{temp_dir or '(ว่าง)'}` อาจทำให้ `pio run` ล้มด้วย `cc1plus.exe: too many filenames given`"
-        else:
-            try:
-                with tempfile.NamedTemporaryFile(dir=temp_dir, delete=True):
-                    pass
-            except Exception as exc:
-                temp_warn = f"TEMP (`{temp_dir}`) ไม่สามารถเขียนไฟล์ชั่วคราวได้: {exc}"
-        if temp_warn:
-            print(f"[WARN] Windows TEMP: {temp_warn}")
-            print('   -> แก้ไขใน PowerShell ก่อนรัน pio: New-Item -ItemType Directory -Force C:\\Temp | Out-Null; $env:TEMP="C:\\Temp"; $env:TMP="C:\\Temp"')
-            warns += 1
-        else:
-            print(f"[OK] Windows TEMP: {temp_dir}")
 
     print("\n" + "=" * 54)
     if fails == 0 and warns == 0:

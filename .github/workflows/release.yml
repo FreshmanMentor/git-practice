@@ -1,7 +1,6 @@
 # ==============================================================================
 # Skeleton สำหรับ LAB06: GitHub Actions Release (CD) & Firmware Binary
-# คู่มืออ้างอิง : docs/labs/LAB06-Release_Tag_and_Firmware_Bin.pdf
-# ไฟล์เฉลย     : exercises/solutions/.github/workflows/release.yml
+# คู่มืออ้างอิง : exercises/labs/LAB06-Release_Tag_and_Firmware_Bin.pdf
 # ==============================================================================
 
 name: Release Firmware (CD)
@@ -37,4 +36,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print LAB06 TODO
-        run: echo "TODO - Complete .github/workflows/release.yml following docs/labs/LAB06-Release_Tag_and_Firmware_Bin.pdf"
+        run: echo "TODO - Complete .github/workflows/release.yml following exercises/labs/LAB06-Release_Tag_and_Firmware_Bin.pdf"

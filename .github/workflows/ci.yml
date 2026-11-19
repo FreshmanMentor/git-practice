@@ -1,7 +1,6 @@
 # ==============================================================================
 # Skeleton สำหรับ LAB05: GitHub Actions CI Pipeline
-# คู่มืออ้างอิง : docs/labs/LAB05-GitHub_Actions_CI_YAML.pdf
-# ไฟล์เฉลย     : exercises/solutions/.github/workflows/ci.yml
+# คู่มืออ้างอิง : exercises/labs/LAB05-GitHub_Actions_CI_YAML.pdf
 # ==============================================================================
 
 name: CI - Lint, Test & Build
@@ -36,4 +35,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print LAB05 TODO
-        run: echo "TODO - Complete .github/workflows/ci.yml following docs/labs/LAB05-GitHub_Actions_CI_YAML.pdf"
+        run: echo "TODO - Complete .github/workflows/ci.yml following exercises/labs/LAB05-GitHub_Actions_CI_YAML.pdf"

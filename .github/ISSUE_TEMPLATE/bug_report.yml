@@ -1,7 +1,6 @@
 # ==============================================================================
 # Skeleton สำหรับ LAB02: GitHub Issue Forms (Bug Report)
-# คู่มืออ้างอิง : docs/labs/LAB02-Issue_Forms_PR_Protection.pdf
-# ไฟล์เฉลย     : exercises/solutions/.github/ISSUE_TEMPLATE/bug_report.yml
+# คู่มืออ้างอิง : exercises/labs/LAB02-Issue_Forms_PR_Protection.pdf
 # ==============================================================================
 
 name: Bug Report (แจ้งบั๊ก Firmware)

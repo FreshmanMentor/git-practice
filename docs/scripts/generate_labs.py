@@ -1187,20 +1187,6 @@ TEMPLATE = """<!DOCTYPE html>
     @page {{
       size: A4;
       margin: 18mm 14mm 16mm 14mm;
-      @top-right {{
-        content: "ESP32 Git, Testing & CI/CD Workshop\\A Dept. Computer Engineering / PlatformIO Lab";
-        white-space: pre;
-        font-family: "Sarabun", sans-serif;
-        font-size: 14pt;
-        color: #475569;
-        text-align: right;
-      }}
-      @bottom-right {{
-        content: "Page " counter(page) " of " counter(pages);
-        font-family: "Sarabun", sans-serif;
-        font-size: 14pt;
-        color: #334155;
-      }}
     }}
     * {{ box-sizing: border-box; }}
     body {{
@@ -1211,21 +1197,6 @@ TEMPLATE = """<!DOCTYPE html>
       margin: 0;
       padding: 0;
       background: #ffffff;
-    }}
-    .doc-header {{
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      border-bottom: 1.5px solid #1e3a8a;
-      padding-bottom: 6px;
-      margin-bottom: 14px;
-      font-size: 14pt;
-      color: #475569;
-    }}
-    .doc-header .left {{
-      font-weight: 700;
-      color: #1e3a8a;
-      font-size: 14pt;
     }}
     h1.lab-title {{
       text-align: center;
@@ -1351,11 +1322,6 @@ TEMPLATE = """<!DOCTYPE html>
   </style>
 </head>
 <body>
-  <div class="doc-header">
-    <div class="left">DOIT ESP32 DevKit v1 • PlatformIO Workshop</div>
-    <div class="right">Git, Pre-commit, Testing &amp; GitHub Actions CI/CD</div>
-  </div>
-
   <h1 class="lab-title">{title}</h1>
 
   <h3 class="sec">วัตถุประสงค์การเรียนรู้ (Objective)</h3>

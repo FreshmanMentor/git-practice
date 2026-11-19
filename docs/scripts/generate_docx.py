@@ -235,17 +235,6 @@ def build_docx(lab: dict) -> Path:
     section.left_margin = Inches(0.65)
     section.right_margin = Inches(0.65)
 
-    # Header & Footer
-    hdr = section.header.paragraphs[0]
-    hdr.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-    hrun = hdr.add_run("DOIT ESP32 DevKit v1 • PlatformIO Workshop | Git, Pre-commit, Testing & CI/CD")
-    set_run_font(hrun, FONT_THAI, BODY_SIZE, color=RGBColor(0x47, 0x55, 0x69))
-
-    ftr = section.footer.paragraphs[0]
-    ftr.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-    frun = ftr.add_run(f"{lab['slug']} — Student Worksheet (.docx)")
-    set_run_font(frun, FONT_THAI, BODY_SIZE, color=RGBColor(0x47, 0x55, 0x69))
-
     # Title
     title_p = doc.add_paragraph()
     title_p.alignment = WD_ALIGN_PARAGRAPH.CENTER

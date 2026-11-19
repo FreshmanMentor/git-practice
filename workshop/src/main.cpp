@@ -12,7 +12,7 @@ void setup() {
   Serial.begin(115200);
   pinMode(LED_BUILTIN, OUTPUT);
 
-  blink_interval_ms = blink_math::clamp_interval(500);
+  blink_interval_ms = blink_math::clamp_interval(5000);
   int sum = blink_math::add_numbers(2, 3);
 
   Serial.println("ESP32 DOIT DevKit v1 - Git & CI/CD Workshop");

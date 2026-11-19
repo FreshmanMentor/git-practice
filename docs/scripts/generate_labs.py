@@ -1189,6 +1189,7 @@ TEMPLATE = """<!DOCTYPE html>
       margin: 18mm 14mm 16mm 14mm;
     }}
     * {{ box-sizing: border-box; }}
+    em, i {{ font-style: normal; }}
     body {{
       font-family: "Sarabun", sans-serif;
       color: #111827;

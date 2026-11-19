@@ -65,7 +65,7 @@ def add_rich_runs(paragraph, html_text: str, base_size: float = BODY_SIZE, base_
         if part.startswith("<strong>") and part.endswith("</strong>"):
             _emit_code_aware(paragraph, part[8:-9], base_size, color, bold=True, italic=False)
         elif part.startswith("<em>") and part.endswith("</em>"):
-            _emit_code_aware(paragraph, part[4:-5], base_size, color, bold=False, italic=True)
+            _emit_code_aware(paragraph, part[4:-5], base_size, color, bold=False, italic=False)
         else:
             _emit_code_aware(paragraph, part, base_size, color, bold=False, italic=False)
 
@@ -180,7 +180,7 @@ def add_picture_block(doc: Document, img_path: Path, caption: str, width_inches:
     p_cap.paragraph_format.space_before = Pt(0)
     p_cap.paragraph_format.space_after = Pt(2)
     rc = p_cap.add_run(caption)
-    set_run_font(rc, FONT_THAI, BODY_SIZE, italic=True, color=RGBColor(0x33, 0x41, 0x55))
+    set_run_font(rc, FONT_THAI, BODY_SIZE, italic=False, color=RGBColor(0x33, 0x41, 0x55))
 
     _ensure_blank_lines(doc, 1)
 
@@ -198,7 +198,7 @@ def add_paste_box(doc: Document, placeholder: str, min_height_inches: float = 0.
     p.paragraph_format.space_before = Pt(0)
     p.paragraph_format.space_after = Pt(0)
     run = p.add_run(placeholder)
-    set_run_font(run, FONT_THAI, 14.0, italic=True, color=RGBColor(0x55, 0x55, 0x55))
+    set_run_font(run, FONT_THAI, BODY_SIZE, italic=False, color=RGBColor(0x55, 0x55, 0x55))
     spacer = doc.add_paragraph()
     spacer.paragraph_format.space_before = Pt(0)
     spacer.paragraph_format.space_after = Pt(4)
